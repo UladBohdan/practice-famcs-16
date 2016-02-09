@@ -1,0 +1,12 @@
+commit cba708bc12fec498aaa06e9a2ef4334d909dfbbf
+Author: UladBohdan <vlbohdan@gmail.com>
+Date:   Tue Feb 9 15:08:29 2016 +0300
+
+    Adding status.txt
+
+commit f430598be6361b390a46f03bc6873b445011e233
+Author: UladBohdan <vlbohdan@gmail.com>
+Date:   Tue Feb 9 15:00:46 2016 +0300
+
+    Adding .gitignore
+
