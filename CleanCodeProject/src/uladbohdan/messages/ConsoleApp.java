@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class ConsoleApp {
@@ -50,6 +50,7 @@ public class ConsoleApp {
                 System.out.println(COMM + "save [file]" + END + " - save messages to a file (file is optional)");
                 System.out.println(COMM + "search [-author/-keyword/-regex] [author/keyword/regex]" + END +
                         " - search by a parameter");
+                System.out.println("* General format for datetime: 2011-12-03T10:15:30");
                 return true;
             case "load":
                 loadMessagesFromJSONFile(command);
@@ -129,32 +130,30 @@ public class ConsoleApp {
             for (Message i : data)
                 System.out.println(i.getFormattedMessage());
         } else {
-            String timeBegin, timeEnd;
+            LocalDateTime timeBegin, timeEnd;
             boolean isF;
             if (command[1].equals("-f")) {
                 isF = true;
-                timeBegin = command[2];
+                timeBegin = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                 if (command.length > 3)
-                    timeEnd = command[3];
+                    timeEnd = LocalDateTime.parse(command[3], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                 else
-                    timeEnd = Long.toString(System.currentTimeMillis() + 9999999);
+                    timeEnd = LocalDateTime.now().plusMinutes(2);
             } else {
                 isF = false;
-                timeBegin = command[1];
+                timeBegin = LocalDateTime.parse(command[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                 if (command.length > 2)
-                    timeEnd = command[2];
+                    timeEnd = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                 else
-                    timeEnd = Long.toString(System.currentTimeMillis() + 9999999);
+                    timeEnd = LocalDateTime.now().plusMinutes(2);
             }
             if (isF)
                 System.out.println("FORMATTED LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
             else
                 System.out.println("FULL LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
             for (Message i : data)
-                if (Long.compare(Long.parseLong(i.getTimeMillis()),
-                        Long.parseLong(timeBegin)) > 0 &&
-                        Long.compare(Long.parseLong(i.getTimeMillis()),
-                                Long.parseLong(timeEnd)) < 0)
+                if (i.getTime().compareTo(timeBegin) > 0 &&
+                        i.getTime().compareTo(timeEnd) < 0)
                     if (isF)
                         System.out.println(i.getFormattedMessage());
                     else
@@ -313,7 +312,13 @@ public class ConsoleApp {
         }
 
         public String getFormattedMessage() {
-            return timestamp + ", by " + author + "   " + message;
+            return getTime() + ", by " + author + "   " + message;
+        }
+
+        public LocalDateTime getTime() {
+            long ms = Long.parseLong(timestamp);
+            Date date = new Date(ms);
+            return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
 
         private String nextID() {
