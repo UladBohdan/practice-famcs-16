@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -14,6 +13,7 @@ public class ConsoleApp {
 
     public ConsoleApp() {
         data = new ArrayList<>();
+        Message.setData(data);
         try {
             logfile = new FileWriter("logfile");
             log("NEW SESSION");
@@ -215,7 +215,7 @@ public class ConsoleApp {
     private void saveMessagesToJSONFile(String[] command) {
         String saveTo;
         if (command.length == 1) {
-            if (file.equals("null")) {
+            if (file == null) {
                 System.out.println(RED + "ERROR: not enough arguments." + END);
                 log("SAVE failed: lack of arguments");
                 return;
@@ -313,85 +313,8 @@ public class ConsoleApp {
     private ArrayList<Message> data;
     private FileWriter logfile;
 
-    private static int nextId = 0;
-    private String file = "saved.txt";
+    private String file;
     private static final String COMM = (char) 27 + "[92m";
     private static final String RED = (char) 27 + "[91m";
     private static final String END = (char) 27 + "[0m";
-
-    class Message implements Comparable<Message> {
-        public Message() {
-            id = nextID();
-            this.message = "?";
-            this.author = "?";
-            timestamp = Long.toString(System.currentTimeMillis());
-        }
-
-        public Message(String author, String message) {
-            id = nextID();
-            this.message = message;
-            this.author = author;
-            timestamp = Long.toString(System.currentTimeMillis());
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public String getTimeMillis() {
-            return timestamp;
-        }
-
-        @Override
-        public int compareTo(Message o) {
-            int cmp = Long.compare(Long.parseLong(timestamp), Long.parseLong(o.getTimeMillis()));
-            if (cmp != 0)
-                return cmp;
-            cmp = author.compareTo(o.getAuthor());
-            if (cmp != 0)
-                return cmp;
-            cmp = message.compareTo(o.getMessage());
-            if (cmp != 0)
-                return cmp;
-            return id.compareTo(o.getId());
-        }
-
-        @Override
-        public String toString() {
-            return id + " " + author + " " + timestamp + " " + message;
-        }
-
-        public String getFormattedMessage() {
-            return getTime() + ", by " + author + "   " + message;
-        }
-
-        public LocalDateTime getTime() {
-            long ms = Long.parseLong(timestamp);
-            Date date = new Date(ms);
-            return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        }
-
-        private String nextID() {
-            boolean isFine;
-            do {
-                ConsoleApp.nextId++;
-                isFine = true;
-                for (Message i : data)
-                    if (i.getId().equals(Integer.toString(nextId)))
-                        isFine = false;
-            }
-            while (!isFine);
-            return Integer.toString(ConsoleApp.nextId);
-        }
-
-        private String id, author, timestamp, message;
-    }
 }
