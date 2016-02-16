@@ -11,6 +11,14 @@ import java.util.regex.Pattern;
 
 public class ConsoleApp {
 
+    private static final String COMM = (char) 27 + "[92m";
+    private static final String RED = (char) 27 + "[91m";
+    private static final String END = (char) 27 + "[0m";
+
+    private ArrayList<Message> data;
+    private FileWriter logfile;
+    private String file;
+
     public ConsoleApp() {
         data = new ArrayList<>();
         Message.setData(data);
@@ -175,13 +183,13 @@ public class ConsoleApp {
                     System.out.println("FULL LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
                     log("QUERY list: " + timeBegin + " to " + timeEnd);
                 }
-                for (Message i : data)
-                    if (i.getTime().compareTo(timeBegin) > 0 &&
-                            i.getTime().compareTo(timeEnd) < 0)
-                        if (isF)
-                            System.out.println(i.getFormattedMessage());
-                        else
-                            System.out.println(i.toString());
+                data.stream().filter(i -> i.getTime().compareTo(timeBegin) > 0 &&
+                        i.getTime().compareTo(timeEnd) < 0).forEach(i -> {
+                    if (isF)
+                        System.out.println(i.getFormattedMessage());
+                    else
+                        System.out.println(i.toString());
+                });
             }
         } catch (Exception e) {
             System.out.println("Failed on your query. Try another one.");
@@ -307,14 +315,8 @@ public class ConsoleApp {
             return;
         try {
             logfile.write(LocalDateTime.now() + " " + string + "\n");
-        } catch (IOException e) {        }
+        } catch (IOException e) {
+            System.out.println(RED + "FAILED log writing" + END);
+        }
     }
-
-    private ArrayList<Message> data;
-    private FileWriter logfile;
-
-    private String file;
-    private static final String COMM = (char) 27 + "[92m";
-    private static final String RED = (char) 27 + "[91m";
-    private static final String END = (char) 27 + "[0m";
 }

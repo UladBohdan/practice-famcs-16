@@ -4,9 +4,16 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 
 class Message implements Comparable<Message> {
+
+    private String id;
+    private String author;
+    private String timestamp;
+    private String message;
+    private static int nextId = 0;
+    private static ArrayList<Message> relatedData;
+
     public Message() {
         id = nextID();
         this.message = "?";
@@ -37,6 +44,12 @@ class Message implements Comparable<Message> {
         return timestamp;
     }
 
+    public LocalDateTime getTime() {
+        long ms = Long.parseLong(timestamp);
+        Date date = new Date(ms);
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
     public static void setData(ArrayList<Message> data) {
         Message.relatedData = data;
     }
@@ -64,12 +77,6 @@ class Message implements Comparable<Message> {
         return String.format("%s %15s : %s", getTime().toString(), author, message);
     }
 
-    public LocalDateTime getTime() {
-        long ms = Long.parseLong(timestamp);
-        Date date = new Date(ms);
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
     private String nextID() {
         boolean isFine;
         do {
@@ -82,8 +89,4 @@ class Message implements Comparable<Message> {
         while (!isFine);
         return Integer.toString(nextId);
     }
-
-    private String id, author, timestamp, message;
-    private static int nextId = 0;
-    private static ArrayList<Message> relatedData;
 }
