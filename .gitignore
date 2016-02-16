@@ -1,7 +1,6 @@
 # gitignore file
 *.iml
 *.zip
-*.jar
 *~
 .idea/
 out/
