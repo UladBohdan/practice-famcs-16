@@ -21,7 +21,6 @@ public class ConsoleApp {
 
     public ConsoleApp() {
         data = new ArrayList<>();
-        Message.setData(data);
         try {
             logfile = new FileWriter("logfile");
             log("NEW SESSION");
@@ -50,27 +49,11 @@ public class ConsoleApp {
         }
     }
 
-    public static void main(String[] args) {
-        new ConsoleApp();
-    }
-
     private boolean handleCommand(String input) {
         String[] command = input.split(" ");
         switch (command[0]) {
             case "help":
-                log("HELP queried");
-                System.out.println("List of available commands:");
-                System.out.println(COMM + "load [file]" + END +
-                        " - load messages from file. Previous data will be lost");
-                System.out.println(COMM + "add [author] [message]" + END +
-                        "- add new message (id&time are given automatically");
-                System.out.println(COMM + "show [-f] [time to start] [time to end]" + END +
-                        " - show messages in chronological order (parameters are optional)");
-                System.out.println(COMM + "remove [id]" + END + " - remove message by id");
-                System.out.println(COMM + "save [file]" + END + " - save messages to a file (file is optional)");
-                System.out.println(COMM + "search [-author/-keyword/-regex] [author/keyword/regex]" + END +
-                        " - search by a parameter");
-                System.out.println("* General format for datetime: 2011-12-03T10:15:30");
+                showHelp();
                 return true;
             case "load":
                 loadMessagesFromJSONFile(command);
@@ -90,6 +73,9 @@ public class ConsoleApp {
             case "search":
                 searchMessages(command);
                 return true;
+            case "clear":
+                clearMessages();
+                return true;
             case "quit":
             case "exit":
                 return false;
@@ -97,6 +83,23 @@ public class ConsoleApp {
                 System.out.println("Unknown command. Try again.");
                 return true;
         }
+    }
+
+    private void showHelp() {
+        log("HELP queried");
+        System.out.println("List of available commands:");
+        System.out.println(COMM + "load [file]" + END +
+                " - load messages from file. Previous data will be lost");
+        System.out.println(COMM + "add [author] [message]" + END +
+                "- add new message (id&time are given automatically");
+        System.out.println(COMM + "show [-f] [time to start] [time to end]" + END +
+                " - show messages in chronological order (parameters are optional)");
+        System.out.println(COMM + "remove [id]" + END + " - remove message by id");
+        System.out.println(COMM + "save [file]" + END + " - save messages to a file (file is optional)");
+        System.out.println(COMM + "search [-author/-keyword/-regex] [author/keyword/regex]" + END +
+                " - search by a parameter");
+        System.out.println(COMM + "clear" + END + " - clears all the messages");
+        System.out.println("* General format for datetime: 2011-12-03T10:15:30");
     }
 
     private void loadMessagesFromJSONFile(String[] command) {
@@ -110,7 +113,6 @@ public class ConsoleApp {
             Reader reader = new InputStreamReader(new FileInputStream(command[1]));
             Gson gson = new GsonBuilder().create();
             Message[] temp = gson.fromJson(reader, Message[].class);
-            data.clear();
             Collections.addAll(data, temp);
             System.out.println("Successfully read " + temp.length + " messages.");
             log("LOAD " + command[1] + " successfully read " + temp.length + " messages.");
@@ -159,42 +161,46 @@ public class ConsoleApp {
                 for (Message i : data)
                     System.out.println(i.getFormattedMessage());
             } else {
-                LocalDateTime timeBegin, timeEnd;
-                boolean isF;
-                if (command[1].equals("-f")) {
-                    isF = true;
-                    timeBegin = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    if (command.length > 3)
-                        timeEnd = LocalDateTime.parse(command[3], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    else
-                        timeEnd = LocalDateTime.now().plusMinutes(2);
-                } else {
-                    isF = false;
-                    timeBegin = LocalDateTime.parse(command[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    if (command.length > 2)
-                        timeEnd = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    else
-                        timeEnd = LocalDateTime.now().plusMinutes(2);
-                }
-                if (isF) {
-                    System.out.println("FORMATTED LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
-                    log("QUERY formatted list: " + timeBegin + " to " + timeEnd);
-                } else {
-                    System.out.println("FULL LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
-                    log("QUERY list: " + timeBegin + " to " + timeEnd);
-                }
-                data.stream().filter(i -> i.getTime().compareTo(timeBegin) > 0 &&
-                        i.getTime().compareTo(timeEnd) < 0).forEach(i -> {
-                    if (isF)
-                        System.out.println(i.getFormattedMessage());
-                    else
-                        System.out.println(i.toString());
-                });
+                showMessagesByTime(command);
             }
         } catch (Exception e) {
             System.out.println("Failed on your query. Try another one.");
             log("QUERY failed");
         }
+    }
+
+    private void showMessagesByTime(String[] command) {
+        LocalDateTime timeBegin, timeEnd;
+        boolean isF;
+        if (command[1].equals("-f")) {
+            isF = true;
+            timeBegin = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            if (command.length > 3)
+                timeEnd = LocalDateTime.parse(command[3], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            else
+                timeEnd = LocalDateTime.now().plusMinutes(2);
+        } else {
+            isF = false;
+            timeBegin = LocalDateTime.parse(command[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            if (command.length > 2)
+                timeEnd = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            else
+                timeEnd = LocalDateTime.now().plusMinutes(2);
+        }
+        if (isF) {
+            System.out.println("FORMATTED LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
+            log("QUERY formatted list: " + timeBegin + " to " + timeEnd);
+        } else {
+            System.out.println("FULL LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
+            log("QUERY list: " + timeBegin + " to " + timeEnd);
+        }
+        data.stream().filter(i -> i.getTime().compareTo(timeBegin) > 0 &&
+                i.getTime().compareTo(timeEnd) < 0).forEach(i -> {
+            if (isF)
+                System.out.println(i.getFormattedMessage());
+            else
+                System.out.println(i.toString());
+        });
     }
 
     private void deleteMessage(String[] command) {
@@ -253,61 +259,78 @@ public class ConsoleApp {
             return;
         }
         try {
-            int counter;
             switch (command[1]) {
                 case "-author":
-                    System.out.println("BY AUTHOR: " + command[2]);
-                    counter = 0;
-                    for (Message i : data) {
-                        if (i.getAuthor().equals(command[2])) {
-                            System.out.println(i.getFormattedMessage());
-                            counter++;
-                        }
-                    }
-                    if (counter == 0) {
-                        System.out.println("nothing found");
-                        log("SEARCH by author: " + command[2] + ", nothing found");
-                    } else {
-                        log("SEARCH by author: " + command[2] + ", found: " + counter);
-                    }
+                    searchByAuthor(command);
                     break;
                 case "-keyword":
-                    System.out.println("BY KEYWORD: " + command[2]);
-                    counter = 0;
-                    for (Message i : data) {
-                        if (i.getMessage().contains(command[2])) {
-                            System.out.println(i.getFormattedMessage());
-                            counter++;
-                        }
-                    }
-                    if (counter == 0) {
-                        System.out.println("nothing found");
-                        log("SEARCH by keyword: " + command[2] + ", nothing found");
-                    } else {
-                        log("SEARCH by keyword: " + command[2] + ", found: " + counter);
-                    }
+                    searchByKeyword(command);
                     break;
                 case "-regex":
-                    System.out.println("BY REGULAR EXPRESSION: " + command[2]);
-                    counter = 0;
-                    for (Message i : data) {
-                        if (Pattern.matches(command[2], i.getMessage())) {
-                            System.out.println(i.getFormattedMessage());
-                            counter++;
-                        }
-                    }
-                    if (counter == 0) {
-                        System.out.println("nothing found");
-                        log("SEARCH by regex: " + command[2] + ", nothing found");
-                    } else {
-                        log("SEARCH by regex: " + command[2] + ", found: " + counter);
-                    }
+                    searchByRegex(command);
                     break;
             }
         } catch (Exception e) {
             System.out.println("Sorry, but something went wrong. Try to change the query.");
             log("SEARCH failed");
         }
+    }
+
+    private void searchByAuthor(String[] command) {
+        System.out.println("BY AUTHOR: " + command[2]);
+        int counter = 0;
+        for (Message i : data) {
+            if (i.getAuthor().equals(command[2])) {
+                System.out.println(i.getFormattedMessage());
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("nothing found");
+            log("SEARCH by author: " + command[2] + ", nothing found");
+        } else {
+            log("SEARCH by author: " + command[2] + ", found: " + counter);
+        }
+    }
+
+    private void searchByKeyword(String[] command) {
+        System.out.println("BY KEYWORD: " + command[2]);
+        int counter = 0;
+        for (Message i : data) {
+            if (i.getMessage().contains(command[2])) {
+                System.out.println(i.getFormattedMessage());
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("nothing found");
+            log("SEARCH by keyword: " + command[2] + ", nothing found");
+        } else {
+            log("SEARCH by keyword: " + command[2] + ", found: " + counter);
+        }
+    }
+
+    private void searchByRegex(String[] command) {
+        System.out.println("BY REGULAR EXPRESSION: " + command[2]);
+        int counter = 0;
+        for (Message i : data) {
+            if (Pattern.matches(command[2], i.getMessage())) {
+                System.out.println(i.getFormattedMessage());
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("nothing found");
+            log("SEARCH by regex: " + command[2] + ", nothing found");
+        } else {
+            log("SEARCH by regex: " + command[2] + ", found: " + counter);
+        }
+    }
+
+    private void clearMessages() {
+        data.clear();
+        System.out.println(RED + "Cleared." + END);
+        log("CLEAR all");
     }
 
     private void log(String string) {

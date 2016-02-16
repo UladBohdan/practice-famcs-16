@@ -2,8 +2,8 @@ package uladbohdan.messages;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 class Message implements Comparable<Message> {
 
@@ -11,18 +11,16 @@ class Message implements Comparable<Message> {
     private String author;
     private String timestamp;
     private String message;
-    private static int nextId = 0;
-    private static ArrayList<Message> relatedData;
 
     public Message() {
-        id = nextID();
+        id = UUID.randomUUID().toString();
         this.message = "?";
         this.author = "?";
         timestamp = Long.toString(System.currentTimeMillis());
     }
 
     public Message(String author, String message) {
-        id = nextID();
+        id = UUID.randomUUID().toString();
         this.message = message;
         this.author = author;
         timestamp = Long.toString(System.currentTimeMillis());
@@ -50,10 +48,6 @@ class Message implements Comparable<Message> {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    public static void setData(ArrayList<Message> data) {
-        Message.relatedData = data;
-    }
-
     @Override
     public int compareTo(Message o) {
         int cmp = Long.compare(Long.parseLong(timestamp), Long.parseLong(o.getTimeMillis()));
@@ -75,18 +69,5 @@ class Message implements Comparable<Message> {
 
     public String getFormattedMessage() {
         return String.format("%s %15s : %s", getTime().toString(), author, message);
-    }
-
-    private String nextID() {
-        boolean isFine;
-        do {
-            nextId++;
-            isFine = true;
-            for (Message i : relatedData)
-                if (i.getId().equals(Integer.toString(nextId)))
-                    isFine = false;
-        }
-        while (!isFine);
-        return Integer.toString(nextId);
     }
 }
