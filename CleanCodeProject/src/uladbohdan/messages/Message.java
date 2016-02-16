@@ -9,21 +9,21 @@ class Message implements Comparable<Message> {
 
     private String id;
     private String author;
-    private String timestamp;
+    private Long timestamp;
     private String message;
 
     public Message() {
         id = UUID.randomUUID().toString();
         this.message = "?";
         this.author = "?";
-        timestamp = Long.toString(System.currentTimeMillis());
+        timestamp = System.currentTimeMillis();
     }
 
     public Message(String author, String message) {
         id = UUID.randomUUID().toString();
         this.message = message;
         this.author = author;
-        timestamp = Long.toString(System.currentTimeMillis());
+        timestamp = System.currentTimeMillis();
     }
 
     public String getId() {
@@ -38,19 +38,18 @@ class Message implements Comparable<Message> {
         return message;
     }
 
-    public String getTimeMillis() {
+    public Long getTimeMillis() {
         return timestamp;
     }
 
     public LocalDateTime getTime() {
-        long ms = Long.parseLong(timestamp);
-        Date date = new Date(ms);
+        Date date = new Date(timestamp);
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     @Override
     public int compareTo(Message o) {
-        int cmp = Long.compare(Long.parseLong(timestamp), Long.parseLong(o.getTimeMillis()));
+        int cmp = timestamp.compareTo(o.getTimeMillis());
         if (cmp != 0)
             return cmp;
         cmp = author.compareTo(o.getAuthor());

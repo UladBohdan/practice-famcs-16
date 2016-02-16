@@ -276,7 +276,7 @@ public class ConsoleApp {
         }
     }
 
-    private void searchByAuthor(String[] command) {
+    private void searchByAuthor(String[] command) throws Exception {
         System.out.println("BY AUTHOR: " + command[2]);
         int counter = 0;
         for (Message i : data) {
@@ -293,7 +293,7 @@ public class ConsoleApp {
         }
     }
 
-    private void searchByKeyword(String[] command) {
+    private void searchByKeyword(String[] command) throws Exception {
         System.out.println("BY KEYWORD: " + command[2]);
         int counter = 0;
         for (Message i : data) {
@@ -310,7 +310,7 @@ public class ConsoleApp {
         }
     }
 
-    private void searchByRegex(String[] command) {
+    private void searchByRegex(String[] command) throws Exception {
         System.out.println("BY REGULAR EXPRESSION: " + command[2]);
         int counter = 0;
         for (Message i : data) {
