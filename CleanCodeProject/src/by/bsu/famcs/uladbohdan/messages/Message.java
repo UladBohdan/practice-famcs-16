@@ -50,14 +50,17 @@ class Message implements Comparable<Message> {
     @Override
     public int compareTo(Message o) {
         int cmp = timestamp.compareTo(o.getTimeMillis());
-        if (cmp != 0)
+        if (cmp != 0) {
             return cmp;
+        }
         cmp = author.compareTo(o.getAuthor());
-        if (cmp != 0)
+        if (cmp != 0) {
             return cmp;
+        }
         cmp = message.compareTo(o.getMessage());
-        if (cmp != 0)
+        if (cmp != 0) {
             return cmp;
+        }
         return id.compareTo(o.getId());
     }
 

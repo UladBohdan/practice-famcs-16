@@ -11,11 +11,12 @@ import java.util.regex.Pattern;
 
 public class ConsoleApp {
 
-    private static final String COMM = (char) 27 + "[92m";
+    private static final String COMMAND = (char) 27 + "[92m";
     private static final String RED = (char) 27 + "[91m";
     private static final String END = (char) 27 + "[0m";
+    private static final int MESSAGE_LENGTH = 140;
 
-    private ArrayList<Message> data;
+    private List<Message> data;
     private FileWriter logfile;
     private String file;
 
@@ -30,8 +31,8 @@ public class ConsoleApp {
         }
         try {
             System.out.println("Console App for working with messages in JSON format.");
-            System.out.println("Type " + COMM + "help" + END + " for list of commands; " +
-                    COMM + "quit" + END + " to quit.");
+            System.out.println("Type " + COMMAND + "help" + END + " for list of commands; " +
+                    COMMAND + "quit" + END + " to quit.");
             Scanner in = new Scanner(System.in);
             while (true) {
                 System.out.print("$ ");
@@ -88,17 +89,17 @@ public class ConsoleApp {
     private void showHelp() {
         log("HELP queried");
         System.out.println("List of available commands:");
-        System.out.println(COMM + "load [file]" + END +
+        System.out.println(COMMAND + "load [file]" + END +
                 " - load messages from file. Previous data will be lost");
-        System.out.println(COMM + "add [author] [message]" + END +
+        System.out.println(COMMAND + "add [author] [message]" + END +
                 "- add new message (id&time are given automatically");
-        System.out.println(COMM + "show [-f] [time to start] [time to end]" + END +
+        System.out.println(COMMAND + "show [-f] [time to start] [time to end]" + END +
                 " - show messages in chronological order (parameters are optional)");
-        System.out.println(COMM + "remove [id]" + END + " - remove message by id");
-        System.out.println(COMM + "save [file]" + END + " - save messages to a file (file is optional)");
-        System.out.println(COMM + "search [-author/-keyword/-regex] [author/keyword/regex]" + END +
+        System.out.println(COMMAND + "remove [id]" + END + " - remove message by id");
+        System.out.println(COMMAND + "save [file]" + END + " - save messages to a file (file is optional)");
+        System.out.println(COMMAND + "search [-author/-keyword/-regex] [author/keyword/regex]" + END +
                 " - search by a parameter");
-        System.out.println(COMM + "clear" + END + " - clears all the messages");
+        System.out.println(COMMAND + "clear" + END + " - clears all the messages");
         System.out.println("* General format for datetime: 2011-12-03T10:15:30");
     }
 
@@ -107,8 +108,9 @@ public class ConsoleApp {
             System.out.println(RED + "ERROR: not enough arguments" + END);
             return;
         }
-        if (command.length > 2)
+        if (command.length > 2) {
             System.out.println(RED + "WARNING: too many arguments" + END);
+        }
         try {
             Reader reader = new InputStreamReader(new FileInputStream(command[1]));
             Gson gson = new GsonBuilder().create();
@@ -125,13 +127,14 @@ public class ConsoleApp {
     }
 
     private void addMessage(String[] command) {
-        if (command.length < 3)
+        if (command.length < 3) {
             System.out.println(RED + "WARNING: not enough arguments" + END);
-        if (command.length == 1)
+        }
+        if (command.length == 1) {
             data.add(new Message());
-        else if (command.length == 2)
+        } else if (command.length == 2) {
             data.add(new Message(command[1], "?"));
-        else {
+        } else {
             StringBuilder msg = new StringBuilder();
             for (int i = 2; i < command.length; i++) {
                 msg.append(command[i]);
@@ -141,8 +144,9 @@ public class ConsoleApp {
             data.add(new Message(command[1], msg.toString()));
         }
         Message last = data.get(data.size() - 1);
-        if (last.getMessage().length() > 140)
+        if (last.getMessage().length() > MESSAGE_LENGTH) {
             System.out.println(RED + "WARNING: long message (more than 140 symbols)." + END);
+        }
         System.out.println("Successfully added: " + last.getFormattedMessage());
         log("ADD " + last.getId() + " " + last.getAuthor() + " " + last.getMessage());
     }
@@ -153,13 +157,15 @@ public class ConsoleApp {
             if (command.length == 1) {
                 System.out.println("FULL LIST OF MESSAGES:");
                 log("QUERY list");
-                for (Message i : data)
+                for (Message i : data) {
                     System.out.println(i.toString());
+                }
             } else if (command.length == 2 && command[1].equals("-f")) {
                 System.out.println("FORMATTED LIST OF MESSAGES:");
                 log("QUERY formatted list");
-                for (Message i : data)
+                for (Message i : data) {
                     System.out.println(i.getFormattedMessage());
+                }
             } else {
                 showMessagesByTime(command);
             }
@@ -175,17 +181,19 @@ public class ConsoleApp {
         if (command[1].equals("-f")) {
             isF = true;
             timeBegin = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            if (command.length > 3)
+            if (command.length > 3) {
                 timeEnd = LocalDateTime.parse(command[3], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            else
+            } else {
                 timeEnd = LocalDateTime.now().plusMinutes(2);
+            }
         } else {
             isF = false;
             timeBegin = LocalDateTime.parse(command[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            if (command.length > 2)
+            if (command.length > 2) {
                 timeEnd = LocalDateTime.parse(command[2], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            else
+            } else {
                 timeEnd = LocalDateTime.now().plusMinutes(2);
+            }
         }
         if (isF) {
             System.out.println("FORMATTED LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
@@ -194,12 +202,13 @@ public class ConsoleApp {
             System.out.println("FULL LIST OF MESSAGES from " + timeBegin + " to " + timeEnd);
             log("QUERY list: " + timeBegin + " to " + timeEnd);
         }
-        data.stream().filter(i -> i.getTime().compareTo(timeBegin) > 0 &&
-                i.getTime().compareTo(timeEnd) < 0).forEach(i -> {
-            if (isF)
+        data.stream().filter( i -> ( ( i.getTime().compareTo(timeBegin) > 0 ) &&
+                ( i.getTime().compareTo(timeEnd) < 0 ) ) ).forEach(i -> {
+            if (isF) {
                 System.out.println(i.getFormattedMessage());
-            else
+            } else {
                 System.out.println(i.toString());
+            }
         });
     }
 
@@ -237,8 +246,9 @@ public class ConsoleApp {
                 System.out.println("Will be saved to " + file);
                 saveTo = file;
             }
-        } else
+        } else {
             saveTo = command[1];
+        }
         try {
             FileWriter out = new FileWriter(saveTo);
             Gson gson = new GsonBuilder().create();
@@ -334,8 +344,9 @@ public class ConsoleApp {
     }
 
     private void log(String string) {
-        if (logfile == null)
+        if (logfile == null) {
             return;
+        }
         try {
             logfile.write(LocalDateTime.now() + " " + string + "\n");
         } catch (IOException e) {
