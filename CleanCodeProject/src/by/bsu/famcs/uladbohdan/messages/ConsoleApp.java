@@ -21,7 +21,7 @@ public class ConsoleApp {
     private void inputWaiter() {
         try (Scanner in = new Scanner(System.in)) {
             do {
-                System.out.print("$ ");
+                System.out.print("json-msg> ");
             } while (handleCommand(in.nextLine()));
         } catch (Exception e) {
             System.out.println("Something went wrong:(");
@@ -79,7 +79,7 @@ public class ConsoleApp {
                 } else if (inputSize == 3 && command[1].equals("-f")) {
                     history.showMessagesByTime(true, command[2], command[3]);
                 } else {
-                    System.out.println(RED + "WRONG QUERY: bad set of arguments");
+                    System.out.println(RED + "WRONG QUERY: bad set of arguments" + END);
                 }
                 return true;
 

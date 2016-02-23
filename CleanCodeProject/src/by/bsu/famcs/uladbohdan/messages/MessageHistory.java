@@ -78,7 +78,7 @@ public class MessageHistory {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Failed on your query. Try another one.");
+            System.out.println(RED + "Failed on your query. Try another one." + END);
             log("QUERY failed");
         }
     }
@@ -113,7 +113,7 @@ public class MessageHistory {
                 }
             });
         } catch (Exception e) {
-            System.out.println("Failed on your query. Try another one.");
+            System.out.println(RED + "Failed on your query. Try another one." + END);
             log("QUERY failed");
         }
     }
