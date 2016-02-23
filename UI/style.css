@@ -1,0 +1,14 @@
+.header-style {
+    border-bottom: 1px;
+    background-color: antiquewhite;
+}
+
+.left-column {
+    width: 200px;
+    alignment: left;
+}
+
+.right-column {
+    width: 500px;
+    alignment: right;
+}
