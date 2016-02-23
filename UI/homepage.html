@@ -3,17 +3,74 @@
     <head>
         <title>Chat</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="messages-style.css">
     </head>
+
     <body>
         <header class="header-style">
-            <h1>messenger alpha</h1>
+            <h1 style="margin-top: 0">Messenger template</h1>
         </header>
-        <section class="left-column">
-            <h2>Name</h2>
-            <h4>edit</h4>
-        </section>
-        <section class="right-column">
-            <h3>history and textboxes and button HERE</h3>
-        </section>
+
+        <div id="chat-main">
+            <div id="left-column">
+                <img src="image.jpg" class="profile-image">
+                <div class="username">UladBohdan</div>
+                <div class="edit">edit name</div>
+            </div>
+            <div id="right-column">
+                <div id="history-area">
+
+                    <div class="message">
+                        <img src="image.jpg" class="message-image">
+                        <div class="message-data">
+                            <div class="message-username">UladBohdan</div>
+                            <div class="message-options">today 18:04 | delete | edit</div>
+                        </div>
+                        <div class="message-text">I've wrote this letter because I can</div>
+                    </div>
+
+
+                    <div class="message">
+                        <img src="image.jpg" class="message-image">
+                        <div class="message-data">
+                            <div class="message-username">UladBohdan</div>
+                            <div class="message-options">today 18:04 | delete | edit</div>
+                        </div>
+                        <div class="message-text">Here I'm trying to send a really long message fdksjf jdksnfjbvhfbs fbds kfdskfds bfsbd dsb jfsbd hjbfds hjbfds bhjsbd hjsdb hjcbdshj  fdj bfhj bf sdbf hjshfdbfhdsbfhd sbfbdsjhfbds hbs dbf dsbfhdb shfbdsjhfbdshjbdhcskcb sdbchjdbkshjbcd sjbfyuefwlf cskfhbdksbf hdsbhdcsjk bchdsjkbyfskcb dhsjkcdv shgvcdjskbchs cb hjkdbshjk cjhdbs jhcdbsjh cbdsb cjhdsb hjcbdsj cds</div>
+                    </div>
+
+                    <div class="message">
+                        <img src="image.jpg" class="message-image">
+                        <div class="message-data">
+                            <div class="message-username">UladBohdan</div>
+                            <div class="message-options">today 18:04 | delete | edit</div>
+                        </div>
+                        <div class="message-text">I've wrote this letter because I can</div>
+                    </div>
+
+                    <div class="message">
+                        <img src="image.jpg" class="message-image">
+                        <div class="message-data">
+                            <div class="message-username">UladBohdan</div>
+                            <div class="message-options">today 18:04 | delete | edit</div>
+                        </div>
+                        <div class="message-text">I've wrote this letter because I can</div>
+                    </div>
+
+                    <div class="message">
+                        <img src="image.jpg" class="message-image">
+                        <div class="message-data">
+                            <div class="message-username">UladBohdan</div>
+                            <div class="message-options">today 18:04 | delete | edit</div>
+                        </div>
+                        <div class="message-text">I've wrote this letter because I can</div>
+                    </div>
+                </div>
+                <form id="new-message-form" method="post">
+                    <input id="input-text" type="text" name="new_message" size="100">
+                    <input id="send-button" type="submit" value="Send!">
+                </form>
+            </div>
+        </div>
     </body>
 </html>
