@@ -1,55 +1,99 @@
 body {
     margin: 0;
     padding: 0;
+    position: relative;
+    overflow-y: auto;
 }
 
 h1 {
     margin-top: 0;
     margin-bottom: 0;
-    color: black;
+    color: white;
 }
 
 .header-style {
     margin: 0;
     padding: 20px;
     position: relative;
-    background: lightblue;
+    color: white;
+    background: darkred;
     border-bottom: 1px lightgray solid;
 }
 
-#chat-main {
-    position: relative;
-    margin: 20px;
-    padding: 10px;
-}
-
 #left-column {
-    position: absolute;
+    position: relative;
     left: 0;
     top: 0;
-    width: 15%;
+    width: 72%;
+    height: 100vh;
 }
 
 #right-column {
-    position: absolute;
-    right: 20px;
+    position: fixed;
+    right: 0;
     top: 0;
-    width: 84%;
+    width: 28%;
+    height: 100%;
+
+    border-left: 2px solid darkred;
+}
+
+.personal-info {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background: darkred;
+    padding: 20px;
 }
 
 .profile-image {
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 20%;
+    float: left;
     border-radius: 5px;
+    margin-right: 20px;
+    border: 2px solid darkred;
 }
 
 .username {
-    font-size: xx-large;
-    margin-bottom: 0;
+    font-size: x-large;
+    color: white;
+    font-weight: bold;
+    margin-left: 20px;
 }
 
-.edit {
-    font-style: italic;
-    font-size: small;
+.settings {
+    background: rgba(139,0,0,0.8);
+    margin-top: 10px;
+    padding: 10px;
+    color: lightgray;
+    font-size: large;
+}
+
+a {
+    color: lightgray;
+}
+
+#new-message-form {
+    position: absolute;
+    bottom: 20px;
+    margin: 20px;
+    width: 95%;
+}
+
+#input-text {
+    border: 1px grey solid;
+    border-radius: 5px;
+    height: 50px;
+    width: 90%;
+    margin: 5px;
+}
+
+#send-button {
+    position: absolute;
+    border: 1px lightgray solid;
+    border-radius: 5px;
+    background-color: darkred;
+    color: white;
+    height: 30px;
+    right: 25px;
+    font-size: larger;
 }

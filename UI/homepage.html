@@ -1,76 +1,155 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Chat</title>
+        <meta charset="utf-8">
+        <title>Messenger</title>
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="stylesheet" type="text/css" href="messages-style.css">
+        <link rel="icon" type="image/png" href="images/icon.png">
     </head>
 
     <body>
-        <header class="header-style">
-            <h1 style="margin-top: 0">Messenger template</h1>
-        </header>
-
-        <div id="chat-main">
-            <div id="left-column">
-                <img src="image.jpg" class="profile-image">
-                <div class="username">UladBohdan</div>
-                <div class="edit">edit name</div>
+        <div id="left-column">
+            <div class="message msg-my">
+                Усім прывіт у гэтым чаціку!
+                <div class="message-options">18.07.1410 18:04 | delete | edit</div>
             </div>
-            <div id="right-column">
-                <div id="history-area">
 
-                    <div class="message">
-                        <img src="image.jpg" class="message-image">
-                        <div class="message-data">
-                            <div class="message-username">UladBohdan</div>
-                            <div class="message-options">today 18:04 | delete | edit</div>
-                        </div>
-                        <div class="message-text">I've wrote this letter because I can</div>
-                    </div>
-
-
-                    <div class="message">
-                        <img src="image.jpg" class="message-image">
-                        <div class="message-data">
-                            <div class="message-username">UladBohdan</div>
-                            <div class="message-options">today 18:04 | delete | edit</div>
-                        </div>
-                        <div class="message-text">Here I'm trying to send a really long message fdksjf jdksnfjbvhfbs fbds kfdskfds bfsbd dsb jfsbd hjbfds hjbfds bhjsbd hjsdb hjcbdshj  fdj bfhj bf sdbf hjshfdbfhdsbfhd sbfbdsjhfbds hbs dbf dsbfhdb shfbdsjhfbdshjbdhcskcb sdbchjdbkshjbcd sjbfyuefwlf cskfhbdksbf hdsbhdcsjk bchdsjkbyfskcb dhsjkcdv shgvcdjskbchs cb hjkdbshjk cjhdbs jhcdbsjh cbdsb cjhdsb hjcbdsj cds</div>
-                    </div>
-
-                    <div class="message">
-                        <img src="image.jpg" class="message-image">
-                        <div class="message-data">
-                            <div class="message-username">UladBohdan</div>
-                            <div class="message-options">today 18:04 | delete | edit</div>
-                        </div>
-                        <div class="message-text">I've wrote this letter because I can</div>
-                    </div>
-
-                    <div class="message">
-                        <img src="image.jpg" class="message-image">
-                        <div class="message-data">
-                            <div class="message-username">UladBohdan</div>
-                            <div class="message-options">today 18:04 | delete | edit</div>
-                        </div>
-                        <div class="message-text">I've wrote this letter because I can</div>
-                    </div>
-
-                    <div class="message">
-                        <img src="image.jpg" class="message-image">
-                        <div class="message-data">
-                            <div class="message-username">UladBohdan</div>
-                            <div class="message-options">today 18:04 | delete | edit</div>
-                        </div>
-                        <div class="message-text">I've wrote this letter because I can</div>
-                    </div>
-                </div>
-                <form id="new-message-form" method="post">
-                    <input id="input-text" type="text" name="new_message" size="100">
-                    <input id="send-button" type="submit" value="Send!">
-                </form>
+            <div class="message msg-my">
+                Клёва мы крыжакоў пабілі на гэтым тыдні, а?
+                <div class="message-options">18.07.1410 18:05 | delete | edit</div>
             </div>
+
+            <div class="message msg-friends">
+                <img src="images/jahaila.jpg" class="message-image">
+                <div class="message-username">Ягайла</div>
+                Nia toje słova!
+                <div class="message-options">18.07.1410 18:10</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/jahaila.jpg" class="message-image">
+                <div class="message-username">Ягайла</div>
+                Davaj piać!
+                <div class="message-options">18.07.1410 18:10</div>
+            </div>
+
+            <div class="message msg-my">
+                А ты ўсё сваёй лацінкай выпендрываешся<br>
+                Прадаўся палякам<br>
+                Ладна, сёння можна<br>
+                Пятуху!
+                <div class="message-options">18.07.1410 18:12 | delete | edit</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/ulrych.jpg" class="message-image">
+                <div class="message-username">Ульрых Фон Юнгінген</div>
+                А вось зараз крыўдна было. Мы проста паддаліся.
+                <div class="message-options">18.07.1410 19:10</div>
+            </div>
+
+            <div class="message msg-friends removed">
+                <img src="images/ulrych.jpg" class="message-image">
+                <div class="message-username">Ульрых Фон Юнгінген</div>
+                removed his message
+                <div class="message-options">18.07.1410 19:13</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/jahaila.jpg" class="message-image">
+                <div class="message-username">Ягайла</div>
+                Ja bačyŭ, što jon tam napisaŭ i vydaliŭ paśla! Niepryhoža tak, Ulrych
+                <div class="message-options">18.07.1410 19:19</div>
+            </div>
+
+            <div class="message msg-my">
+                Ульрых, ну. Нельга так.
+                <div class="message-options">18.07.1410 19:20 | delete | edit</div>
+            </div>
+
+            <div class="message msg-my">
+                А наогул, як ты ў чаціку апынуўся? Мы ж цябе ціп у палон узялі.
+                <div class="message-options">18.07.1410 19:22 | delete | edit</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/ulrych.jpg" class="message-image">
+                <div class="message-username">Ульрых Фон Юнгінген</div>
+                Я і сяджу ў палоне:(<br>
+                У Варшаве<br>
+                Але тут ловіць вай-фай з суседняга старбакса. Нармас.
+                <div class="message-options">18.07.1410 19:29</div>
+            </div>
+
+            <div class="message msg-my">
+                У Варшаве ёсць старбакс?<br>
+                Што за справы, Ягайла? У Наваградку ўсё яшчэ няма.
+                <div class="message-options">18.07.1410 19:30 | delete | edit</div>
+            </div>
+
+            <div class="message msg-my">
+                <textarea class="msg-edit">Ты ж абяцаў што мы адначасова іх адчынім. А то цяпер у Беларусі старбакс яшчэ гадоў 600 не з'явіцца</textarea>
+                &nbsp;
+                <div class="message-options">18.07.1410 19:40 | delete | edit</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/mindouh.jpg" class="message-image">
+                <div class="message-username">Міндоўг</div>
+                лол
+                <div class="message-options">20.07.1410 12:01</div>
+            </div>
+
+            <div class="message msg-my">
+                лол? Чакай. Ты Міндоўг? Ты ж памёр. Даўно.
+                <div class="message-options">20.07.1410 12:18 | delete | edit</div>
+            </div>
+
+            <div class="message msg-my removed">
+                you've removed this message
+                <div class="message-options">20.07.1410 12:21 | delete | edit</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/jahaila.jpg" class="message-image">
+                <div class="message-username">Ягайла</div>
+                Pachodu, fejk
+                <div class="message-options">20.07.1410 15:09</div>
+            </div>
+
+            <div class="message msg-my">
+                Паходу
+                <div class="message-options">20.07.1410 19:07 | delete | edit</div>
+            </div>
+
+            <div class="message msg-friends">
+                <img src="images/mindouh.jpg" class="message-image">
+                <div class="message-username">Міндоўг</div>
+                лол
+                <div class="message-options">20.07.1410 21:45</div>
+            </div>
+        </div>
+
+        <div id="right-column">
+            <header class="header-style">
+                <img src="images/icon.png" style="float: left; margin-right: 10px;">
+                <h1>Messenger</h1>
+            </header>
+            <div class="personal-info">
+                <img src="images/vitaut.jpg" class="profile-image">
+                <div class="username">Князь Вітаўт</div>
+            </div>
+
+            <div class="settings">Edit your nickname</div>
+            <div class="settings">by Uladzislau Bohdan. source <a href="https://github.com/UladBohdan/practice-famcs-16">here</a></div>
+
+            <form id="new-message-form" method="post">
+                <textarea id="input-text" name="new_message" title="New message"></textarea><br>
+                <input id="send-button" type="submit" value="Send!">
+            </form>
+
+
         </div>
     </body>
 </html>
