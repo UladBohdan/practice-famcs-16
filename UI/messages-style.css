@@ -9,20 +9,28 @@
 
 .msg-my {
     border-color: darkred;
-    background-color: rgba(139,0,0,0.05);
+    background-color: rgba(139,0,0,0.8);
     margin-left: 37%;
+    color: white;
 }
 
 .msg-friends {
-    border-color: darkgray;
+    border-color: rgba(139,0,0,0.8);
+    background-color: rgba(139,0,0,0.2);
 }
 
 .removed {
-    background-color: lightslategray;
-    border-color: lightslategray;
+    background-color: lightgray;
+    border-color: gray;
+    color: gray;
     font-style: italic;
     font-size: small;
- }
+
+}
+
+.img-removed {
+
+}
 
 .edited {
 
@@ -54,5 +62,16 @@
 
 .msg-edit {
     width: 98%;
+    max-width: 98%;
     height: 100%;
+    background-color: rgba(139,0,0,0.1);
+    color: white;
+}
+
+.btn-edit {
+    border: 1px lightgray solid;
+    border-radius: 5px;
+    background-color: darkred;
+    color: white;
+    float: left;
 }

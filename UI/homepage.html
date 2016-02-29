@@ -12,7 +12,7 @@
         <div id="left-column">
             <div class="message msg-my">
                 Усім прывіт у гэтым чаціку!
-                <div class="message-options">18.07.1410 18:04 | delete | edit</div>
+                <div class="message-options">18.07.1410 18:04 | delete | edit | <b>last edited: 18.07.1410 17:40</b></div>
             </div>
 
             <div class="message msg-my">
@@ -35,7 +35,7 @@
             </div>
 
             <div class="message msg-my">
-                А ты ўсё сваёй лацінкай выпендрываешся<br>
+                А ты ўсё сваёй лацінкай вылузваешся<br>
                 Прадаўся палякам<br>
                 Ладна, сёння можна<br>
                 Пятуху!
@@ -50,7 +50,7 @@
             </div>
 
             <div class="message msg-friends removed">
-                <img src="images/ulrych.jpg" class="message-image">
+                <img src="images/ulrych.jpg" class="message-image img-removed">
                 <div class="message-username">Ульрых Фон Юнгінген</div>
                 removed his message
                 <div class="message-options">18.07.1410 19:13</div>
@@ -59,8 +59,8 @@
             <div class="message msg-friends">
                 <img src="images/jahaila.jpg" class="message-image">
                 <div class="message-username">Ягайла</div>
-                Ja bačyŭ, što jon tam napisaŭ i vydaliŭ paśla! Niepryhoža tak, Ulrych
-                <div class="message-options">18.07.1410 19:19</div>
+                Ja bačyŭ, što jon tam napisaŭ i vydaliŭ paśla! Niepryhoža tak, Ulrych<br>&nbsp;
+                <div class="message-options">18.07.1410 19:19 | <b>last edited: 18.07.1410 19:18</b></div>
             </div>
 
             <div class="message msg-my">
@@ -69,7 +69,7 @@
             </div>
 
             <div class="message msg-my">
-                А наогул, як ты ў чаціку апынуўся? Мы ж цябе ціп у палон узялі.
+                А наогул, як ты ў чаціку апынуўся? Мы ж цябе ціп у палон узялі.<br>&nbsp;
                 <div class="message-options">18.07.1410 19:22 | delete | edit</div>
             </div>
 
@@ -89,8 +89,10 @@
             </div>
 
             <div class="message msg-my">
-                <textarea class="msg-edit">Ты ж абяцаў што мы адначасова іх адчынім. А то цяпер у Беларусі старбакс яшчэ гадоў 600 не з'явіцца</textarea>
-                &nbsp;
+                <form method="post">
+                    <textarea class="msg-edit">Ты ж абяцаў што мы адначасова іх адчынім. А то цяпер у Беларусі старбакс яшчэ гадоў 600 не з'явіцца</textarea>
+                    <input class="btn-edit" type="submit" value="Edit">
+                </form> &nbsp;
                 <div class="message-options">18.07.1410 19:40 | delete | edit</div>
             </div>
 
@@ -141,8 +143,15 @@
                 <div class="username">Князь Вітаўт</div>
             </div>
 
-            <div class="settings">Edit your nickname</div>
-            <div class="settings">by Uladzislau Bohdan. source <a href="https://github.com/UladBohdan/practice-famcs-16">here</a></div>
+            <div class="settings">
+                Edit your nickname:<br>
+                <form class="username-change">
+                    <input type="text" class="new-username-textfield">
+                    <input type="submit" class="update-username" value="Update!">
+                </form>
+            </div>
+            <div class="settings">Your connection is stable!</div>
+            <div class="settings">by Uladzislau Bohdan. source code on <a href="https://github.com/UladBohdan/practice-famcs-16">GitHub</a></div>
 
             <form id="new-message-form" method="post">
                 <textarea id="input-text" name="new_message" title="New message"></textarea><br>

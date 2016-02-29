@@ -3,6 +3,7 @@ body {
     padding: 0;
     position: relative;
     overflow-y: auto;
+    background-color: lightgray;
 }
 
 h1 {
@@ -64,8 +65,26 @@ h1 {
     background: rgba(139,0,0,0.8);
     margin-top: 10px;
     padding: 10px;
-    color: lightgray;
+    color: white;
     font-size: large;
+}
+
+.username-change {
+
+}
+
+.new-username-textfield {
+    border-radius: 3px;
+    width: 70%;
+    border: 1px lightgray solid;
+}
+
+.update-username {
+    border-radius: 3px;
+    width: 20%;
+    background-color: darkred;
+    color: white;
+    border: 1px lightgray solid;
 }
 
 a {
@@ -82,8 +101,11 @@ a {
 #input-text {
     border: 1px grey solid;
     border-radius: 5px;
-    height: 50px;
+    max-height: 50px;
+    min-height: 50px;
     width: 90%;
+    max-width: 90%;
+    min-width: 90%;
     margin: 5px;
 }
 
