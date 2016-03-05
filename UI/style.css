@@ -46,7 +46,7 @@ h1 {
     padding: 20px;
 }
 
-.profile-image {
+#profile-image {
     width: 20%;
     float: left;
     border-radius: 5px;
@@ -54,7 +54,7 @@ h1 {
     border: 2px solid darkred;
 }
 
-.username {
+#username {
     font-size: x-large;
     color: white;
     font-weight: bold;
@@ -73,13 +73,13 @@ h1 {
 
 }
 
-.new-username-textfield {
+#new-username-textfield {
     border-radius: 3px;
     width: 70%;
     border: 1px lightgray solid;
 }
 
-.update-username {
+#update-username-button {
     border-radius: 3px;
     width: 20%;
     background-color: darkred;

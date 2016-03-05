@@ -2,136 +2,17 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Messenger</title>
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="stylesheet" type="text/css" href="messages-style.css">
         <link rel="icon" type="image/png" href="images/icon.png">
+        <script src="scripts.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     </head>
 
-    <body>
-        <div id="left-column">
-            <div class="message msg-my">
-                Усім прывіт у гэтым чаціку!
-                <div class="message-options">18.07.1410 18:04 | delete | edit | <b>last edited: 18.07.1410 17:40</b></div>
-            </div>
-
-            <div class="message msg-my">
-                Клёва мы крыжакоў пабілі на гэтым тыдні, а?
-                <div class="message-options">18.07.1410 18:05 | delete | edit</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/jahaila.jpg" class="message-image">
-                <div class="message-username">Ягайла</div>
-                Nia toje słova!
-                <div class="message-options">18.07.1410 18:10</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/jahaila.jpg" class="message-image">
-                <div class="message-username">Ягайла</div>
-                Davaj piać!
-                <div class="message-options">18.07.1410 18:10</div>
-            </div>
-
-            <div class="message msg-my">
-                А ты ўсё сваёй лацінкай вылузваешся<br>
-                Прадаўся палякам<br>
-                Ладна, сёння можна<br>
-                Пятуху!
-                <div class="message-options">18.07.1410 18:12 | delete | edit</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/ulrych.jpg" class="message-image">
-                <div class="message-username">Ульрых Фон Юнгінген</div>
-                А вось зараз крыўдна было. Мы проста паддаліся.
-                <div class="message-options">18.07.1410 19:10</div>
-            </div>
-
-            <div class="message msg-friends removed">
-                <img src="images/ulrych.jpg" class="message-image img-removed">
-                <div class="message-username">Ульрых Фон Юнгінген</div>
-                removed his message
-                <div class="message-options">18.07.1410 19:13</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/jahaila.jpg" class="message-image">
-                <div class="message-username">Ягайла</div>
-                Ja bačyŭ, što jon tam napisaŭ i vydaliŭ paśla! Niepryhoža tak, Ulrych<br>&nbsp;
-                <div class="message-options">18.07.1410 19:19 | <b>last edited: 18.07.1410 19:18</b></div>
-            </div>
-
-            <div class="message msg-my">
-                Ульрых, ну. Нельга так.
-                <div class="message-options">18.07.1410 19:20 | delete | edit</div>
-            </div>
-
-            <div class="message msg-my">
-                А наогул, як ты ў чаціку апынуўся? Мы ж цябе ціп у палон узялі.<br>&nbsp;
-                <div class="message-options">18.07.1410 19:22 | delete | edit</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/ulrych.jpg" class="message-image">
-                <div class="message-username">Ульрых Фон Юнгінген</div>
-                Я і сяджу ў палоне:(<br>
-                У Варшаве<br>
-                Але тут ловіць вай-фай з суседняга старбакса. Нармас.
-                <div class="message-options">18.07.1410 19:29</div>
-            </div>
-
-            <div class="message msg-my">
-                У Варшаве ёсць старбакс?<br>
-                Што за справы, Ягайла? У Наваградку ўсё яшчэ няма.
-                <div class="message-options">18.07.1410 19:30 | delete | edit</div>
-            </div>
-
-            <div class="message msg-my">
-                <form method="post">
-                    <textarea class="msg-edit">Ты ж абяцаў што мы адначасова іх адчынім. А то цяпер у Беларусі старбакс яшчэ гадоў 600 не з'явіцца</textarea>
-                    <input class="btn-edit" type="submit" value="Edit">
-                </form> &nbsp;
-                <div class="message-options">18.07.1410 19:40 | delete | edit</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/mindouh.jpg" class="message-image">
-                <div class="message-username">Міндоўг</div>
-                лол
-                <div class="message-options">20.07.1410 12:01</div>
-            </div>
-
-            <div class="message msg-my">
-                лол? Чакай. Ты Міндоўг? Ты ж памёр. Даўно.
-                <div class="message-options">20.07.1410 12:18 | delete | edit</div>
-            </div>
-
-            <div class="message msg-my removed">
-                you've removed this message
-                <div class="message-options">20.07.1410 12:21 | delete | edit</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/jahaila.jpg" class="message-image">
-                <div class="message-username">Ягайла</div>
-                Pachodu, fejk
-                <div class="message-options">20.07.1410 15:09</div>
-            </div>
-
-            <div class="message msg-my">
-                Паходу
-                <div class="message-options">20.07.1410 19:07 | delete | edit</div>
-            </div>
-
-            <div class="message msg-friends">
-                <img src="images/mindouh.jpg" class="message-image">
-                <div class="message-username">Міндоўг</div>
-                лол
-                <div class="message-options">20.07.1410 21:45</div>
-            </div>
-        </div>
+    <body onload="run()">
+        <div id="left-column"></div>
 
         <div id="right-column">
             <header class="header-style">
@@ -139,24 +20,25 @@
                 <h1>Messenger</h1>
             </header>
             <div class="personal-info">
-                <img src="images/vitaut.jpg" class="profile-image">
-                <div class="username">Князь Вітаўт</div>
+                <img src="images/vitaut.jpg" id="profile-image">
+                <div id="username">Князь Вітаўт</div>
             </div>
 
             <div class="settings">
                 Edit your nickname:<br>
-                <form class="username-change">
-                    <input type="text" class="new-username-textfield">
-                    <input type="submit" class="update-username" value="Update!">
-                </form>
+                <div class="username-change">
+                    <input type="text" id="new-username-textfield">
+                    <button id="update-username-button" onclick="updateUsername()">update!</button>
+                </div>
             </div>
+            <div class="settings"><a onclick="runDemo()">Run demo conversation</a></div>
             <div class="settings">Your connection is stable!</div>
             <div class="settings">by Uladzislau Bohdan. source code on <a href="https://github.com/UladBohdan/practice-famcs-16">GitHub</a></div>
 
-            <form id="new-message-form" method="post">
+            <div id="new-message-form">
                 <textarea id="input-text" name="new_message" title="New message"></textarea><br>
-                <input id="send-button" type="submit" value="Send!">
-            </form>
+                <button id="send-button" onclick="sendMessage()">Send!</button>
+            </div>
 
 
         </div>
