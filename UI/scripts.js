@@ -1,14 +1,18 @@
+var nextId = 0;
+
 function sendMessage() {
     var msg = document.createElement('div');
     msg.classList.add('message', 'msg-my');
+    msg.id = 'mymsg' + nextId;
     var textField = document.getElementById('input-text');
     if (! textField.value)
         return;
     msg.appendChild(document.createTextNode(textField.value));
-    msg.appendChild(getMsgOptions(true));
+    msg.appendChild(getMsgOptions(true, false));
     document.getElementById('left-column').appendChild(msg);
     autoAnswer('usual');
     textField.value = '';
+    nextId++;
 }
 
 function autoAnswer(type) {
@@ -25,11 +29,15 @@ function autoAnswer(type) {
     document.getElementById('left-column').appendChild(msg);
 }
 
-function getMsgOptions(me) {
+function getMsgOptions(me, edited, id) {
     var msgInfo = document.createElement('div');
     msgInfo.classList.add('message-options');
     if (me)
-        msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel() + ' | ' + getEditLabel();
+        if (!edited)
+            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(null) + ' | ' + getEditLabel(null);
+        else
+            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id)
+                + ' | <b>was edited</b>';
     else
         msgInfo.appendChild(document.createTextNode(getTime()));
     return msgInfo;
@@ -43,12 +51,18 @@ function getTime() {
     return timeStr;
 }
 
-function getRemoveLabel() {
-    return "<a class='remLabel' onclick='removeMsg()'>remove</a>";
+function getRemoveLabel(id) {
+    if (id == null)
+        return "<a class='remLabel' onclick='removeMsg("+nextId+")'>remove</a>";
+    else
+        return "<a class='remLabel' onclick='removeMsg("+id+")'>remove</a>";
 }
 
-function getEditLabel() {
-    return "<a class='editLabel' onclick='editMsg()'>edit</a>"
+function getEditLabel(id) {
+    if (id == null)
+        return "<a class='editLabel' onclick='editMsg("+nextId+")'>edit</a>"
+    else
+        return "<a class='editLabel' onclick='editMsg("+id+")'>edit</a>"
 }
 
 function getUserImage() {
@@ -74,12 +88,36 @@ function updateUsername() {
     newName.value = '';
 }
 
-function removeMsg() {
-    alert("removing!");
+function removeMsg(id) {
+    var msg = document.getElementById('mymsg'+id);
+    msg.classList.add('removed');
+    msg.innerHTML = "";
+    msg.appendChild(document.createTextNode("you've removed this message"));
+    msg.appendChild(getMsgOptions(false));
 }
 
-function editMsg() {
-    alert("editing!");
+function editMsg(id) {
+    var msg = document.getElementById('mymsg'+id);
+    msg.removeChild(msg.childNodes[1]);
+    var text = msg.innerText;
+    msg.innerHTML = "";
+    var area = document.createElement('textarea');
+    area.classList.add('msg-edit');
+    area.id = "area" + id;
+    area.innerHTML = text;
+    msg.appendChild(area);
+    msg.innerHTML += "<button class='btn-edit' onclick='submitEditing("+id+")'>Edit</button>"
+    msg.innerHTML += '<br>&nbsp;';
+    msg.appendChild(getMsgOptions(false));
+}
+
+function submitEditing(id) {
+    var msg = document.getElementById("mymsg" + id);
+
+    var newText = document.getElementById("area" + id).value;
+    msg.innerHTML = "";
+    msg.appendChild(document.createTextNode(newText));
+    msg.appendChild(getMsgOptions(true, true, id));
 }
 
 function runDemo() {
@@ -89,4 +127,5 @@ function runDemo() {
             document.getElementById('left-column').innerHTML = result;
         }
     });
+    document.getElementById('username').innerText = "Князь Вітаўт";
 }
