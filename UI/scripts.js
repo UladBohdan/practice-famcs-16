@@ -10,7 +10,7 @@ function sendMessage() {
     msg.appendChild(document.createTextNode(textField.value));
     msg.appendChild(getMsgOptions(true, false));
     document.getElementById('left-column').appendChild(msg);
-    autoAnswer('usual');
+  //  autoAnswer('usual');
     textField.value = '';
     nextId++;
 }
@@ -118,14 +118,4 @@ function submitEditing(id) {
     msg.innerHTML = "";
     msg.appendChild(document.createTextNode(newText));
     msg.appendChild(getMsgOptions(true, true, id));
-}
-
-function runDemo() {
-    $.ajax({
-        url : "_demo.html",
-        success : function(result){
-            document.getElementById('left-column').innerHTML = result;
-        }
-    });
-    document.getElementById('username').innerText = "Князь Вітаўт";
 }

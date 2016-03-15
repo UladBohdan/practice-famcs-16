@@ -8,10 +8,9 @@
         <link rel="stylesheet" type="text/css" href="messages-style.css">
         <link rel="icon" type="image/png" href="images/icon.png">
         <script src="scripts.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     </head>
 
-    <body onload="run()">
+    <body>
         <div id="left-column"></div>
 
         <div id="right-column">
@@ -20,8 +19,7 @@
                 <h1>Messenger</h1>
             </header>
             <div class="personal-info">
-                <img src="images/vitaut.jpg" id="profile-image">
-                <div id="username">Князь Вітаўт</div>
+                <div id="username">Username</div>
             </div>
 
             <div class="settings">
@@ -31,7 +29,6 @@
                     <button id="update-username-button" onclick="updateUsername()">update!</button>
                 </div>
             </div>
-            <div class="settings"><a onclick="runDemo()">Run demo conversation</a></div>
             <div class="settings">Your connection is stable!</div>
             <div class="settings">by Uladzislau Bohdan. source code on <a href="https://github.com/UladBohdan/practice-famcs-16">GitHub</a></div>
 
@@ -39,7 +36,6 @@
                 <textarea id="input-text" name="new_message" title="New message"></textarea><br>
                 <button id="send-button" onclick="sendMessage()">Send!</button>
             </div>
-
 
         </div>
     </body>
