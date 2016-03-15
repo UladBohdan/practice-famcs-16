@@ -1,3 +1,4 @@
+var messages = [];
 var nextId = 0;
 
 function sendMessage() {
