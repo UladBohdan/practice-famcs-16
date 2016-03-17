@@ -44,7 +44,6 @@ public class Log implements Logger {
     private void logFile(String logMessage) {
         try(FileWriter fileLogging = new FileWriter(className, true)) {
             fileLogging.write(LocalDateTime.now() + " " + logMessage + "\n");
-            fileLogging.close();
         } catch (IOException exc) {
             System.out.println("Logging failed");
         }
