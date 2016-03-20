@@ -1,32 +1,71 @@
 var messages = [];
-var nextId = 0;
+var currentUsername = "";
 
-function sendMessage() {
-    var msg = document.createElement('div');
-    msg.classList.add('message', 'msg-my');
-    msg.id = 'mymsg' + nextId;
-    var textField = document.getElementById('input-text');
-    if (! textField.value)
-        return;
-    msg.appendChild(document.createTextNode(textField.value));
-    msg.appendChild(getMsgOptions(true, false));
-    document.getElementById('left-column').appendChild(msg);
-  //  autoAnswer('usual');
-    textField.value = '';
-    nextId++;
+function run() {
+    messages = loadMessages() || setDefaultMessages();
+    currentUsername = loadUsername() || "Username";
+    document.getElementById('username').innerText = currentUsername;
+    render(messages);
 }
 
-function autoAnswer(type) {
-    var msg = document.createElement('div');
-    msg.classList.add('message', 'msg-friends');
-    msg.appendChild(getUserImage());
-    msg.appendChild(getUsername());
+function newMessage(username, text) {
+    return {
+        "username": username,
+        "text": text,
+        "removed": false,
+        "edited": false,
+        "timestamp": new Date().getTime(),
+        "id": "" + uniqueId()
+    };
+}
+
+function uniqueId() {
+    var date = Date.now();
+    var random = Math.random() * Math.random();
+    return Math.floor(date * random);
+}
+
+function setDefaultMessages() {
+    return [
+        newMessage("UladBohdan", "Message 1"),
+        newMessage("UladBohdan", "Message 2"),
+        newMessage("UladBohdan", "Message 3")
+    ]
+}
+
+function render(messages) {
+    for (var i = 0; i < messages.length; i++) {
+        renderMessage(messages[i]);
+    }
+}
+
+function renderMessage(message) {
+
+    /*
     if (type != 'removed') {
         msg.appendChild(document.createTextNode('Yes, I agree with you! [AUTO ANSWERED]'));
     } else if (type == 'removed') {
         msg.appendChild(document.createTextNode('removed his/her message'));
     }
     msg.appendChild(getMsgOptions(false));
+    document.getElementById('left-column').appendChild(msg); */
+
+
+    var msg = document.createElement('div');
+    msg.classList.add('message');
+    if (message.username == currentUsername) {
+        msg.classList.add('msg-my');
+    } else {
+        msg.classList.add('msg-friends');
+    }
+
+    var nameDiv = document.createElement('div');
+    nameDiv.classList.add('message-username');
+    nameDiv.appendChild(document.createTextNode(message.username));
+    msg.appendChild(nameDiv);
+
+    msg.appendChild(document.createTextNode(message.text));
+    msg.appendChild(getMsgOptions(message.username == currentUsername, message.edited, message.id));
     document.getElementById('left-column').appendChild(msg);
 }
 
@@ -66,29 +105,6 @@ function getEditLabel(id) {
         return "<a class='editLabel' onclick='editMsg("+id+")'>edit</a>"
 }
 
-function getUserImage() {
-    var image = document.createElement('img');
-    image.setAttribute('src', 'images/mindouh.jpg');
-    image.classList.add('message-image');
-    return image;
-}
-
-function getUsername() {
-    var name = document.createElement('div');
-    name.classList.add('message-username');
-    name.appendChild(document.createTextNode('Mindouh'));
-    return name;
-}
-
-function updateUsername() {
-    var newName = document.getElementById('new-username-textfield');
-    if (!newName.value)
-        return;
-    var username = document.getElementById('username');
-    username.innerText = newName.value;
-    newName.value = '';
-}
-
 function removeMsg(id) {
     var msg = document.getElementById('mymsg'+id);
     msg.classList.add('removed');
@@ -119,4 +135,61 @@ function submitEditing(id) {
     msg.innerHTML = "";
     msg.appendChild(document.createTextNode(newText));
     msg.appendChild(getMsgOptions(true, true, id));
+}
+
+
+
+function saveMessages(messages) {
+    if(typeof(Storage) == "undefined") {
+        alert('localStorage is not accessible');
+        return;
+    }
+    localStorage.setItem("Message History", JSON.stringify(messages));
+}
+
+function loadMessages() {
+    if(typeof(Storage) == "undefined") {
+        alert('localStorage is not accessible');
+        return;
+    }
+
+    var item = localStorage.getItem("Message History");
+
+    return item && JSON.parse(item);
+}
+
+function saveUsername(username) {
+    if(typeof(Storage) == "undefined") {
+        alert('localStorage is not accessible');
+        return;
+    }
+    localStorage.setItem("Current Username", username);
+}
+
+function loadUsername() {
+    if(typeof(Storage) == "undefined") {
+        alert('localStorage is not accessible');
+        return;
+    }
+
+    var item = localStorage.getItem("Current Username");
+
+    return item;
+}
+
+function updateUsername() {
+    var newName = document.getElementById('new-username-textfield').value;
+    if (!newName)
+        return;
+    var username = document.getElementById('username');
+    username.innerText = newName;
+    saveUsername(newName);
+    newName.value = '';
+}
+
+function sendMessage() {
+    var msg = newMessage("username0", document.getElementById('input-text').value)
+    messages.push(msg);
+    saveMessages(messages);
+    renderMessage(msg);
 }
