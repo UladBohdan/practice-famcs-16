@@ -34,6 +34,9 @@ function setDefaultMessages() {
 }
 
 function render(messages) {
+    while (document.getElementById('left-column').hasChildNodes()) {
+        document.getElementById('left-column').removeChild(document.getElementById('left-column').firstChild);
+    }
     for (var i = 0; i < messages.length; i++) {
         renderMessage(messages[i]);
     }
@@ -41,45 +44,46 @@ function render(messages) {
 
 function renderMessage(message) {
 
-    /*
-    if (type != 'removed') {
-        msg.appendChild(document.createTextNode('Yes, I agree with you! [AUTO ANSWERED]'));
-    } else if (type == 'removed') {
-        msg.appendChild(document.createTextNode('removed his/her message'));
-    }
-    msg.appendChild(getMsgOptions(false));
-    document.getElementById('left-column').appendChild(msg); */
-
+    var me = (message.username == currentUsername);
 
     var msg = document.createElement('div');
     msg.classList.add('message');
-    if (message.username == currentUsername) {
+    if (me) {
         msg.classList.add('msg-my');
     } else {
         msg.classList.add('msg-friends');
+        var nameDiv = document.createElement('div');
+        nameDiv.classList.add('message-username');
+        nameDiv.appendChild(document.createTextNode(message.username));
+        msg.appendChild(nameDiv);
     }
-
-    var nameDiv = document.createElement('div');
-    nameDiv.classList.add('message-username');
-    nameDiv.appendChild(document.createTextNode(message.username));
-    msg.appendChild(nameDiv);
-
-    msg.appendChild(document.createTextNode(message.text));
-    msg.appendChild(getMsgOptions(message.username == currentUsername, message.edited, message.id));
+    if (message.removed) {
+        msg.classList.add('removed');
+        msg.appendChild(document.createTextNode("you've removed this message"));
+    } else {
+        msg.appendChild(document.createTextNode(message.text));
+    }
+    msg.appendChild(getMsgOptions(message));
     document.getElementById('left-column').appendChild(msg);
 }
 
-function getMsgOptions(me, edited, id) {
+function getMsgOptions(message) {
+
+    var me = (message.username == currentUsername);
+    var id = message.id;
+
     var msgInfo = document.createElement('div');
     msgInfo.classList.add('message-options');
-    if (me)
-        if (!edited)
-            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(null) + ' | ' + getEditLabel(null);
-        else
+    if (me) {
+        if (message.edited) {
             msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id)
                 + ' | <b>was edited</b>';
-    else
-        msgInfo.appendChild(document.createTextNode(getTime()));
+        } else {
+            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id);
+        }
+    } else {
+        msgInfo.innerHTML = getTime();
+    }
     return msgInfo;
 }
 
@@ -93,24 +97,26 @@ function getTime() {
 
 function getRemoveLabel(id) {
     if (id == null)
-        return "<a class='remLabel' onclick='removeMsg("+nextId+")'>remove</a>";
+        return "<a class='remLabel' onclick='removeMsg("+id+")'>remove</a>";
     else
         return "<a class='remLabel' onclick='removeMsg("+id+")'>remove</a>";
 }
 
 function getEditLabel(id) {
     if (id == null)
-        return "<a class='editLabel' onclick='editMsg("+nextId+")'>edit</a>"
+        return "<a class='editLabel' onclick='editMsg("+id+")'>edit</a>"
     else
         return "<a class='editLabel' onclick='editMsg("+id+")'>edit</a>"
 }
 
 function removeMsg(id) {
-    var msg = document.getElementById('mymsg'+id);
-    msg.classList.add('removed');
-    msg.innerHTML = "";
-    msg.appendChild(document.createTextNode("you've removed this message"));
-    msg.appendChild(getMsgOptions(false));
+    for (var i = 0; i < messages.length; i++) {
+        if (messages[i].id == id) {
+            messages[i].removed = true;
+        }
+    }
+    saveMessages(messages);
+    render(messages);
 }
 
 function editMsg(id) {
@@ -188,7 +194,7 @@ function updateUsername() {
 }
 
 function sendMessage() {
-    var msg = newMessage("username0", document.getElementById('input-text').value)
+    var msg = newMessage(currentUsername, document.getElementById('input-text').value)
     messages.push(msg);
     saveMessages(messages);
     renderMessage(msg);
