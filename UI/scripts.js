@@ -204,7 +204,9 @@ function updateUsername() {
 }
 
 function sendMessage() {
-    var msg = newMessage(currentUsername, document.getElementById('input-text').value)
+    var textBox = document.getElementById('input-text');
+    var msg = newMessage(currentUsername, textBox.value);
+    textBox.value = "";
     messages.push(msg);
     saveMessages(messages);
     renderMessage(msg);
