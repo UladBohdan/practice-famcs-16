@@ -5,3 +5,9 @@
 .idea/
 out/
 Server-example/.idea/
+Server-example/launcherlog.txt
+Server-example/serverlog.txt
+CleanCodeProject/log.txt
+CleanCodeProject/logfile
+CleanCodeProject/msg.txt
+

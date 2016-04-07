@@ -1,6 +1,0 @@
-[by.bsu.up.chat.client.Client] Message from server: {ivan}
-[by.bsu.up.chat.client.Client] Message from server: ivan
-[by.bsu.up.chat.client.Client] Connection error. Disconnecting...
-2016-03-16T15:14:27.312 Message from server: ivan
-2016-03-16T15:14:39.362 Message from server: ivan
-2016-03-16T15:16:11.793 Connection error. Disconnecting...

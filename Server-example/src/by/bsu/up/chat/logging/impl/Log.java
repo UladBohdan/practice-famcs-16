@@ -1,6 +1,5 @@
 package by.bsu.up.chat.logging.impl;
 
-import by.bsu.up.chat.client.Client;
 import by.bsu.up.chat.logging.Logger;
 import by.bsu.up.chat.server.ServerHandler;
 
@@ -12,7 +11,6 @@ public class Log implements Logger {
 
     private static final String TEMPLATE = "[%s] %s";
     private static final String SERVER_LOG_FILE_NAME = "serverlog.txt";
-    private static final String CLIENT_LOG_FILE_NAME = "clientlog.txt";
     private static final String DEFAULT_LOG_FILE_NAME = "launcherlog.txt";
     private String className;
 
@@ -22,8 +20,6 @@ public class Log implements Logger {
         tag = String.format(TEMPLATE, cls.getName(), "%s");
         if (cls.getSimpleName().equals(ServerHandler.class.getSimpleName()))
             className = SERVER_LOG_FILE_NAME;
-        else if (cls.getSimpleName().equals(Client.class.getSimpleName()))
-            className = CLIENT_LOG_FILE_NAME;
         else
             className = DEFAULT_LOG_FILE_NAME;
     }
