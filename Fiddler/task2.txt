@@ -1,0 +1,11 @@
+GET http://localhost:8000/chat?token=TN41EN HTTP/1.1
+Host: localhost:8000
+Content-Length: 20
+User-Agent: Composer
+
+HTTP/1.1 200 OK
+Date: Tue, 29 Mar 2016 11:46:45 GMT
+Access-control-allow-origin: *
+Content-length: 48
+
+{"messages":["Fourth message"],"token":"TN43EN"}
