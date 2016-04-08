@@ -101,11 +101,37 @@ public class ServerHandler implements HttpHandler {
     }
 
     private Response doPut(HttpExchange httpExchange) {
-        return Response.withCode(Constants.RESPONSE_CODE_NOT_IMPLEMENTED);
+        try {
+            Message message = MessageHelper.getMessageToEdit(httpExchange.getRequestBody());
+            Message updatedMessage = messageStorage.editMessage(message.getId(), message.getText());
+            if (updatedMessage != null) {
+                logger.info(String.format("Message edited: %s", updatedMessage));
+            } else {
+                logger.info("Message to be edited not found");
+            }
+            return Response.ok();
+        } catch (ParseException e) {
+            logger.error("Could not parse message.", e);
+            return new Response(Constants.RESPONSE_CODE_BAD_REQUEST, "Incorrect request body");
+        }
     }
 
     private Response doDelete(HttpExchange httpExchange) {
-        return Response.withCode(Constants.RESPONSE_CODE_NOT_IMPLEMENTED);
+        String query = httpExchange.getRequestURI().getQuery();
+        if (query == null) {
+            return Response.badRequest("Absent query in request");
+        }
+        Map<String, String> map = queryToMap(query);
+        String id = map.get(Constants.REQUEST_PARAM_MESSAGE_ID);
+        if (StringUtils.isEmpty(id)) {
+            return Response.badRequest("msgId query parameter is required to remove a message");
+        }
+        try {
+            messageStorage.markMessageAsRemoved(id);
+            return Response.ok();
+        } catch (InvalidTokenException e) {
+            return Response.badRequest(e.getMessage());
+        }
     }
 
     private Response doOptions(HttpExchange httpExchange) {

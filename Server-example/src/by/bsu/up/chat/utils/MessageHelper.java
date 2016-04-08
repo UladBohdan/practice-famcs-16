@@ -5,6 +5,7 @@ import by.bsu.up.chat.InvalidTokenException;
 //import by.bsu.up.chat.common.models.Message;
 import by.bsu.up.chat.logging.Logger;
 import by.bsu.up.chat.logging.impl.Log;
+import jdk.internal.util.xml.impl.Input;
 import jdk.nashorn.internal.ir.debug.JSONWriter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -113,17 +114,32 @@ public class MessageHelper {
         return jsonObject.toJSONString();
     }
 
+    public static Message getMessageToEdit(InputStream inputStream) throws ParseException {
+        JSONObject jsonObject = stringToJsonObject(inputStreamToString(inputStream));
+        String id = ((String) jsonObject.get(Constants.Message.FIELD_ID));
+        String newText = ((String) jsonObject.get(Constants.Message.FIELD_TEXT));
+        Message message = new Message();
+        message.setId(id);
+        message.setText(newText);
+        return message;
+    }
+
     public static Message getClientMessage(InputStream inputStream) throws ParseException {
         JSONObject jsonObject = stringToJsonObject(inputStreamToString(inputStream));
         String id = ((String) jsonObject.get(Constants.Message.FIELD_ID));
         String author = ((String) jsonObject.get(Constants.Message.FIELD_AUTHOR));
         long timestamp = ((long) jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
         String text = ((String) jsonObject.get(Constants.Message.FIELD_TEXT));
+        boolean edited = jsonObject.get(Constants.Message.FIELD_EDITED).equals(true);
+        System.out.println("HAVE " + edited);
+        boolean removed = jsonObject.get(Constants.Message.FIELD_REMOVED).equals(true);
         Message message = new Message();
         message.setId(id);
         message.setAuthor(author);
         message.setTimestamp(timestamp);
         message.setText(text);
+        message.setEdited(edited);
+        message.setRemoved(removed);
         return message;
     }
 
@@ -152,6 +168,8 @@ public class MessageHelper {
         jsonObject.put(Constants.Message.FIELD_AUTHOR, message.getAuthor());
         jsonObject.put(Constants.Message.FIELD_TIMESTAMP, message.getTimestamp());
         jsonObject.put(Constants.Message.FIELD_TEXT, message.getText());
+        jsonObject.put(Constants.Message.FIELD_REMOVED, message.isRemoved());
+        jsonObject.put(Constants.Message.FIELD_EDITED, message.isEdited());
         return jsonObject;
     }
 }

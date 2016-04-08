@@ -70,6 +70,18 @@ public class MessageHistory {
         addMessage(message);
     }
 
+    public Message editMessage(String id, String updatedText) {
+        for (Message message : data) {
+            if (message.getId().equals(id)) {
+                message.setText(updatedText);
+                message.setEdited(true);
+                saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
+                return message;
+            }
+        }
+        return null;
+    }
+
     public void showMessages(boolean isFormatted) {
         try {
             Collections.sort(data);
@@ -127,7 +139,7 @@ public class MessageHistory {
         }
     }
 
-    public void deleteMessage(String id) {
+    public void deleteMessagePermanently(String id) {
         if (id == null) {
             log("DELETE failed: lack of arguments");
             System.out.println(RED + "ERROR: not enough arguments. ID is required to delete a message" + END);
@@ -147,6 +159,16 @@ public class MessageHistory {
         } else {
             System.out.println("Message not found. Nothing removed.");
             log("DELETE failed: if not found");
+        }
+    }
+
+    public void markMessageAsRemoved(String id) {
+        for(Message message : data) {
+            if (message.getId().equals(id)) {
+                message.setRemoved(true);
+                saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
+                return;
+            }
         }
     }
 

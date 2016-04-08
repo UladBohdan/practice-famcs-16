@@ -84,7 +84,7 @@ public class ConsoleApp {
                 return true;
 
             case "remove":
-                history.deleteMessage( inputSize == 0 ? null : command[1] );
+                history.deleteMessagePermanently( inputSize == 0 ? null : command[1] );
                 return true;
 
             case "save":
