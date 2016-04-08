@@ -2,12 +2,9 @@ package by.bsu.up.chat.server;
 
 import by.bsu.up.chat.Constants;
 import by.bsu.up.chat.InvalidTokenException;
-import by.bsu.up.chat.common.models.Message;
 import by.bsu.up.chat.logging.Logger;
 import by.bsu.up.chat.logging.impl.Log;
-import by.bsu.up.chat.storage.InMemoryMessageStorage;
-import by.bsu.up.chat.storage.MessageStorage;
-import by.bsu.up.chat.storage.Portion;
+
 import by.bsu.up.chat.utils.MessageHelper;
 import by.bsu.up.chat.utils.StringUtils;
 import com.sun.net.httpserver.Headers;
@@ -23,11 +20,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import by.bsu.famcs.uladbohdan.messages.MessageHistory;
+import by.bsu.famcs.uladbohdan.messages.Message;
+
 public class ServerHandler implements HttpHandler {
 
     private static final Logger logger = Log.create(ServerHandler.class);
 
-    private MessageStorage messageStorage = new InMemoryMessageStorage();
+    private MessageHistory messageStorage = new MessageHistory();
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -80,8 +80,7 @@ public class ServerHandler implements HttpHandler {
                 return Response.badRequest(
                         String.format("Incorrect token in request: %s. Server does not have so many messages", token));
             }
-            Portion portion = new Portion(index);
-            List<Message> messages = messageStorage.getPortion(portion);
+            List<Message> messages = messageStorage.getPortion(index);
             String responseBody = MessageHelper.buildServerResponseBody(messages, messageStorage.size());
             return Response.ok(responseBody);
         } catch (InvalidTokenException e) {
@@ -145,22 +144,5 @@ public class ServerHandler implements HttpHandler {
             }
         }
         return result;
-    }
-
-    /**
-     * This method does absolutely the same as
-     * {@link ServerHandler#queryToMap(String)} one, but uses
-     * Java's 8 Stream API and lambda expressions
-     * <p>
-     *     It's just as an example. Bu you can use it
-     * @param query the query to be parsed
-     * @return the map, containing parsed key-value pairs from request
-     */
-    private Map<String, String> queryToMap2(String query) {
-        return Stream.of(query.split(Constants.REQUEST_PARAMS_DELIMITER))
-                .collect(Collectors.toMap(
-                        keyValuePair -> keyValuePair.split("=")[0],
-                        keyValuePair -> keyValuePair.split("=")[1]
-                ));
     }
 }
