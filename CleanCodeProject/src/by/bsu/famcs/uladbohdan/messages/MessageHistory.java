@@ -18,12 +18,15 @@ public class MessageHistory {
     public static final String RED = ConsoleApp.RED;
     public static final String END = ConsoleApp.END;
 
+    private static final String MESSAGES_EXTERNAL_STORAGE = "backup.json";
+
     private List<Message> data;
     private FileWriter logfile;
     private String file;
 
     public MessageHistory() {
         data = new ArrayList<>();
+        loadMessagesFromJsonFile(MESSAGES_EXTERNAL_STORAGE);
         try {
             logfile = new FileWriter("logfile");
             log("NEW SESSION");
@@ -33,7 +36,7 @@ public class MessageHistory {
         }
     }
 
-    public void loadMessagesFromJSONFile(String fileName) {
+    public void loadMessagesFromJsonFile(String fileName) {
         if (fileName == null) {
             System.out.println(RED + "ERROR: not enough arguments" + END);
             return;
@@ -51,14 +54,20 @@ public class MessageHistory {
         }
     }
 
-    public void addMessage(String author, String message) {
-        data.add(new Message(author, message));
+    public void addMessage(Message message) {
+        data.add(message);
         Message last = data.get(data.size() - 1);
-        if (last.getMessage().length() > MESSAGE_LENGTH) {
+        if (last.getText().length() > MESSAGE_LENGTH) {
             System.out.println(RED + "WARNING: long message (more than 140 symbols)." + END);
         }
         System.out.println("Successfully added: " + last.getFormattedMessage());
-        log("ADD " + last.getId() + " " + last.getAuthor() + " " + last.getMessage());
+        log("ADD " + last.getId() + " " + last.getAuthor() + " " + last.getText());
+        saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
+    }
+
+    public void addMessage(String author, String text) {
+        Message message = new Message(author, text);
+        addMessage(message);
     }
 
     public void showMessages(boolean isFormatted) {
@@ -132,6 +141,7 @@ public class MessageHistory {
             }
         }
         if (isRemoved) {
+            saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
             System.out.println("Successfully removed by id: " + id);
             log("DELETE successfully by id: " + id);
         } else {
@@ -140,7 +150,7 @@ public class MessageHistory {
         }
     }
 
-    public void saveMessagesToJSONFile(String fileName) {
+    public void saveMessagesToJsonFile(String fileName) {
         String saveTo;
         if (fileName == null) {
             if (file == null) {
@@ -167,8 +177,21 @@ public class MessageHistory {
 
     public void clearMessages() {
         data.clear();
+        saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
         System.out.println(RED + "Cleared." + END);
         log("CLEAR all");
+    }
+
+    public int size() {
+        return data.size();
+    }
+
+    public List<Message> getPortion(int index) {
+        List<Message> portion = new ArrayList<Message>();
+        for (int i = index; i < data.size(); i++) {
+            portion.add(data.get(i));
+        }
+        return portion;
     }
 
     public void close() {
@@ -222,7 +245,7 @@ public class MessageHistory {
         System.out.println("BY KEYWORD: " + keyword);
         int counter = 0;
         for (Message i : data) {
-            if (i.getMessage().contains(keyword)) {
+            if (i.getText().contains(keyword)) {
                 System.out.println(i.getFormattedMessage());
                 counter++;
             }
@@ -239,7 +262,7 @@ public class MessageHistory {
         System.out.println("BY REGULAR EXPRESSION: " + regex);
         int counter = 0;
         for (Message i : data) {
-            if (Pattern.matches(regex, i.getMessage())) {
+            if (Pattern.matches(regex, i.getText())) {
                 System.out.println(i.getFormattedMessage());
                 counter++;
             }

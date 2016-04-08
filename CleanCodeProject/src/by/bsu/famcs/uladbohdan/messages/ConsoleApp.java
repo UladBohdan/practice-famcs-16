@@ -40,7 +40,7 @@ public class ConsoleApp {
                 return true;
 
             case "load":
-                history.loadMessagesFromJSONFile( inputSize == 0 ? null : command[1] );
+                history.loadMessagesFromJsonFile( inputSize == 0 ? null : command[1] );
                 return true;
 
             case "add":
@@ -88,7 +88,7 @@ public class ConsoleApp {
                 return true;
 
             case "save":
-                history.saveMessagesToJSONFile( inputSize == 0 ? null : command[1] );
+                history.saveMessagesToJsonFile( inputSize == 0 ? null : command[1] );
                 return true;
 
             case "search":

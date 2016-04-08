@@ -5,24 +5,30 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
-class Message implements Comparable<Message> {
+public class Message implements Comparable<Message> {
 
     private String id;
     private String author;
     private Long timestamp;
-    private String message;
+    private String text;
+    private boolean edited;
+    private boolean removed;
 
     public Message() {
         id = UUID.randomUUID().toString();
-        this.message = "?";
+        this.text = "?";
         this.author = "?";
+        this.removed = false;
+        this.edited = false;
         timestamp = System.currentTimeMillis();
     }
 
     public Message(String author, String message) {
         id = UUID.randomUUID().toString();
-        this.message = message;
+        this.text = message;
         this.author = author;
+        this.removed = false;
+        this.edited = false;
         timestamp = System.currentTimeMillis();
     }
 
@@ -34,12 +40,44 @@ class Message implements Comparable<Message> {
         return author;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public Long getTimeMillis() {
+    public Long getTimestamp() {
         return timestamp;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 
     public LocalDateTime getTime() {
@@ -49,7 +87,7 @@ class Message implements Comparable<Message> {
 
     @Override
     public int compareTo(Message o) {
-        int cmp = timestamp.compareTo(o.getTimeMillis());
+        int cmp = timestamp.compareTo(o.getTimestamp());
         if (cmp != 0) {
             return cmp;
         }
@@ -57,7 +95,7 @@ class Message implements Comparable<Message> {
         if (cmp != 0) {
             return cmp;
         }
-        cmp = message.compareTo(o.getMessage());
+        cmp = text.compareTo(o.getText());
         if (cmp != 0) {
             return cmp;
         }
@@ -66,10 +104,10 @@ class Message implements Comparable<Message> {
 
     @Override
     public String toString() {
-        return id + " " + author + " " + timestamp + " " + message;
+        return id + " " + author + " " + timestamp + " " + text;
     }
 
     public String getFormattedMessage() {
-        return String.format("%s %15s : %s", getTime().toString(), author, message);
+        return String.format("%s %15s : %s", getTime().toString(), author, text);
     }
 }
