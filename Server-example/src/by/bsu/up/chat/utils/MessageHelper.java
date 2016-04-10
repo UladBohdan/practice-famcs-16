@@ -2,7 +2,6 @@ package by.bsu.up.chat.utils;
 
 import by.bsu.up.chat.Constants;
 import by.bsu.up.chat.InvalidTokenException;
-//import by.bsu.up.chat.common.models.Message;
 import by.bsu.up.chat.logging.Logger;
 import by.bsu.up.chat.logging.impl.Log;
 import jdk.internal.util.xml.impl.Input;
@@ -15,7 +14,6 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import by.bsu.famcs.uladbohdan.messages.Message;
 
@@ -131,7 +129,6 @@ public class MessageHelper {
         long timestamp = ((long) jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
         String text = ((String) jsonObject.get(Constants.Message.FIELD_TEXT));
         boolean edited = jsonObject.get(Constants.Message.FIELD_EDITED).equals(true);
-        System.out.println("HAVE " + edited);
         boolean removed = jsonObject.get(Constants.Message.FIELD_REMOVED).equals(true);
         Message message = new Message();
         message.setId(id);

@@ -17,8 +17,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import by.bsu.famcs.uladbohdan.messages.MessageHistory;
 import by.bsu.famcs.uladbohdan.messages.Message;
@@ -127,7 +125,7 @@ public class ServerHandler implements HttpHandler {
             return Response.badRequest("msgId query parameter is required to remove a message");
         }
         try {
-            messageStorage.markMessageAsRemoved(id);
+            messageStorage.markMessageAsRemovedOrRecovered(id);
             return Response.ok();
         } catch (InvalidTokenException e) {
             return Response.badRequest(e.getMessage());

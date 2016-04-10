@@ -9,6 +9,7 @@
         <link rel="stylesheet" type="text/css" href="messages-style.css">
         <link rel="icon" type="image/png" href="images/icon.png">
         <script src="scripts.js"></script>
+        <script src="rendering.js"></script>
     </head>
 
     <body onload="run()">
@@ -20,18 +21,19 @@
                 <h1>Messenger</h1>
             </header>
             <div class="personal-info">
-                <div id="username"></div>
+                <div id="author"></div>
             </div>
 
             <div class="settings">
                 Edit your nickname:<br>
-                <div class="username-change">
-                    <input type="text" id="new-username-textfield">
-                    <button id="update-username-button" onclick="updateUsername()">update!</button>
+                <div class="author-change">
+                    <input type="text" id="new-author-textfield">
+                    <button id="update-author-button" onclick="updateAuthorName()">update!</button>
                 </div>
             </div>
             <div class="settings">Your connection is stable!</div>
             <div class="settings">by Uladzislau Bohdan. source code on <a href="https://github.com/UladBohdan/practice-famcs-16">GitHub</a></div>
+            <div class="settings"><pre id="output"></pre></div>
 
             <div id="new-message-form">
                 <textarea id="input-text" name="new_message" title="New message"></textarea><br>

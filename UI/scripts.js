@@ -1,20 +1,27 @@
-var messages = [];
-var currentUsername = "";
+'use strict';
+
+var Application = {
+    mainUrl : "http://127.0.1.1:1555/chat",
+    messages : [],
+    token : "TN11EN",
+    author : ""
+};
+
+var editing = null;
 
 function run() {
-    messages = loadMessages() || setDefaultMessages();
-    currentUsername = loadUsername() || "Username";
-    document.getElementById('username').innerText = currentUsername;
-    render(messages);
+    loadMessages(function(){
+            render(Application);
+        });
+    loadAuthor();
 }
 
-function newMessage(username, text) {
+function newMessage(text) {
     return {
-        "username": username,
+        "author": Application.author,
         "text": text,
         "removed": false,
         "edited": false,
-        "editing": false,
         "timestamp": new Date().getTime(),
         "id": "" + uniqueId()
     };
@@ -26,188 +33,173 @@ function uniqueId() {
     return Math.floor(date * random);
 }
 
-function setDefaultMessages() {
-    return [
-        newMessage("UladBohdan", "Message 1"),
-        newMessage("UladBohdan", "Message 2"),
-        newMessage("UladBohdan", "Message 3")
-    ]
-}
-
 function findMessageById(id) {
-    for (var i = 0; i < messages.length; i++) {
-        if (messages[i].id == id)
-            return messages[i];
+    for (var i = 0; i < Application.messages.length; i++) {
+        if (Application.messages[i].id == id)
+            return Application.messages[i];
     }
-}
-
-function render(messages) {
-    while (document.getElementById('left-column').hasChildNodes()) {
-        document.getElementById('left-column').removeChild(document.getElementById('left-column').firstChild);
-    }
-    for (var i = 0; i < messages.length; i++) {
-        renderMessage(messages[i]);
-    }
-}
-
-function renderMessage(message) {
-    var me = (message.username == currentUsername);
-
-    var msg = document.createElement('div');
-    msg.id = message.id;
-    msg.classList.add('message');
-    if (me) {
-        msg.classList.add('msg-my');
-    } else {
-        msg.classList.add('msg-friends');
-        var nameDiv = document.createElement('div');
-        nameDiv.classList.add('message-username');
-        nameDiv.appendChild(document.createTextNode(message.username));
-        msg.appendChild(nameDiv);
-    }
-    if (message.editing) {
-        var area = document.createElement('textarea');
-        area.classList.add('msg-edit');
-        area.id = "area" + message.id;
-        area.innerHTML = message.text;
-        msg.appendChild(area);
-        msg.innerHTML += "<button class='btn-edit' onclick='submitEditing(" + ('' + message.id) + ")'>Edit</button>"
-        msg.innerHTML += "<button class='btn-edit' onclick='cancelEditing(" + ('' + message.id) + ")'>Cancel</button>"
-        msg.innerHTML += '<br>&nbsp;';
-    } else if (message.removed) {
-        msg.classList.add('removed');
-        msg.appendChild(document.createTextNode("you've removed this message"));
-    } else {
-        msg.appendChild(document.createTextNode(message.text));
-    }
-    msg.appendChild(getMsgOptions(message));
-    document.getElementById('left-column').appendChild(msg);
-}
-
-function getMsgOptions(message) {
-    var me = (message.username == currentUsername);
-    var id = message.id;
-
-    var msgInfo = document.createElement('div');
-    msgInfo.classList.add('message-options');
-    if (me) {
-        if (message.removed) {
-            msgInfo.innerHTML = getTime() + ' | ' + getRecoverLabel(id);
-        } else if (message.edited) {
-            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id)
-                + ' | <b>was edited</b>';
-        } else {
-            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id);
-        }
-    } else {
-        msgInfo.innerHTML = getTime();
-    }
-    return msgInfo;
-}
-
-function getTime() {
-    var timeInMs = new Date();
-    var timeStr = ' ';
-    timeStr += timeInMs.getDate() + '.' + (timeInMs.getMonth() + 1) + '.' + timeInMs.getFullYear();
-    timeStr += ' ' + timeInMs.getHours() + ':' + timeInMs.getMinutes();
-    return timeStr;
-}
-
-function getRemoveLabel(id) {
-    return "<a onclick='removeMsg(" + ('' + id) + ")'>remove</a>";
-}
-
-function getEditLabel(id) {
-   return "<a onclick='editMsg(" + ('' + id) + ")'>edit</a>"
-}
-
-function getRecoverLabel(id) {
-    return "<a style='color: black;' onclick='recoverMsg(" + ('' + id) + ")'>recover</a>";
 }
 
 function removeMsg(id) {
-    findMessageById(id).removed = true;
-    saveMessages(messages);
-    render(messages);
+    var url = Application.mainUrl + "?msgId=" + id;
+    ajax('DELETE', url, null, function(){
+        findMessageById(id).removed = true;
+        render(Application);
+    });
 }
 
 function editMsg(id) {
-    findMessageById(id).editing = true;
-    render(messages);
+    editing = id;
+    render(Application);
 }
 
 function recoverMsg(id) {
-    findMessageById(id).removed = false;
-    saveMessages(messages);
-    render(messages);
+    var url = Application.mainUrl + "?msgId=" + id;
+    ajax('DELETE', url, null, function(){
+        findMessageById(id).removed = false;
+        render(Application);
+    });
 }
 
 function submitEditing(id) {
     var message = findMessageById(id);
-    message.editing = false;
     message.edited = true;
-    message.text = document.getElementById("area" + id).value;
-    render(messages);
+    message.text = document.getElementById("editing-area").value;
+
+    ajax('PUT', Application.mainUrl, JSON.stringify(message), function(){
+        editing = null;
+        render(Application);
+    });
 }
 
 function cancelEditing(id) {
-    findMessageById(id).editing = false;
-    render(messages);
+    editing = null;
+    render(Application);
 }
 
-function saveMessages(messages) {
-    if (typeof(Storage) == "undefined") {
-        alert('localStorage is not accessible');
-        return;
-    }
-    localStorage.setItem("Message History", JSON.stringify(messages));
+function loadMessages(done) {
+    var url = Application.mainUrl + "?token=" + Application.token;
+
+    ajax('GET', url, null, function(responseText){
+        var response = JSON.parse(responseText);
+        Application.messages = response.messages;
+        Application.token = response.token;
+        done();
+    });
 }
 
-function loadMessages() {
+function saveAuthor(newName) {
     if (typeof(Storage) == "undefined") {
-        alert('localStorage is not accessible');
-        return;
-    }
-
-    var item = localStorage.getItem("Message History");
-
-    return item && JSON.parse(item);
-}
-
-function saveUsername(username) {
-    if (typeof(Storage) == "undefined") {
-        alert('localStorage is not accessible');
-        return;
-    }
-    localStorage.setItem("Current Username", username);
-}
-
-function loadUsername() {
-    if (typeof(Storage) == "undefined") {
-        alert('localStorage is not accessible');
+        output('localStorage is not accessible');
         return;
     }
 
-    return localStorage.getItem("Current Username");
+    localStorage.setItem("current-author-name", newName);
 }
 
-function updateUsername() {
-    var newName = document.getElementById('new-username-textfield');
-    if (!newName.value)
+function loadAuthor() {
+    if (typeof(Storage) == "undefined") {
+        output('localStorage is not accessible');
         return;
-    var username = document.getElementById('username');
-    username.innerText = newName.value;
-    currentUsername = newName.value;
-    saveUsername(currentUsername);
+    }
+
+    Application.author = localStorage.getItem("current-author-name") || "Guest";
+    document.getElementById('author').innerText = Application.author;
+}
+
+function updateAuthorName() {
+    var newName = document.getElementById('new-author-textfield');
+    if (newName.value == '' || newName == null) {
+        return;
+    }
+    var authorName = document.getElementById('author');
+    authorName.innerHTML = newName.value;
+    Application.author = newName.value;
+    saveAuthor(newName.value);
     newName.value = '';
-    render(messages);
+    render(Application);
 }
 
 function sendMessage() {
     var textBox = document.getElementById('input-text');
-    var msg = newMessage(currentUsername, textBox.value);
-    textBox.value = "";
-    messages.push(msg);
-    saveMessages(messages);
-    renderMessage(msg);
+    var text = textBox.value;
+    if (text == '' || text == null) {
+        return;
+    }
+    var msg = newMessage(text);
+
+    ajax('POST', Application.mainUrl, JSON.stringify(msg), function() {
+        textBox.value = "";
+        Application.messages.push(msg);
+        render(Application);
+    });
 }
+
+function ajax(method, url, data, continueWith, continueWithError) {
+    var xhr = new XMLHttpRequest();
+
+    continueWithError = continueWithError || defaultErrorHandler;
+    xhr.open(method || 'GET', url, true);
+
+    xhr.onload = function () {
+        if (xhr.readyState !== 4)
+            return;
+
+        if(xhr.status != 200) {
+            continueWithError('Error on the server side, response ' + xhr.status);
+            return;
+        }
+
+        if(isError(xhr.responseText)) {
+            continueWithError('Error on the server side, response ' + xhr.responseText);
+            return;
+        }
+
+        continueWith(xhr.responseText);
+    };
+
+    xhr.ontimeout = function () {
+        continueWithError('Server timed out !');
+    };
+
+    xhr.onerror = function (e) {
+        var errMsg = 'Server connection error !\n'+
+            '\n' +
+            'Check if \n'+
+            '- server is active\n'+
+            '- server sends header "Access-Control-Allow-Origin:*"\n'+
+            '- server sends header "Access-Control-Allow-Methods: PUT, DELETE, POST, GET, OPTIONS"\n';
+
+        continueWithError(errMsg);
+    };
+
+    xhr.send(data);
+}
+
+function defaultErrorHandler(message) {
+    console.error(message);
+    output(message);
+}
+
+function output(value){
+    var output = document.getElementById('output');
+
+    output.innerText = JSON.stringify(value, null, 2);
+}
+
+function isError(text) {
+    if(text == "")
+        return false;
+
+    try {
+        var obj = JSON.parse(text);
+    } catch(ex) {
+        return true;
+    }
+
+    return !!obj.error;
+}
+
+window.onerror = function(err) {
+    output(err.toString());
+};

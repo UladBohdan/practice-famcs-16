@@ -162,10 +162,10 @@ public class MessageHistory {
         }
     }
 
-    public void markMessageAsRemoved(String id) {
+    public void markMessageAsRemovedOrRecovered(String id) {
         for(Message message : data) {
             if (message.getId().equals(id)) {
-                message.setRemoved(true);
+                message.setRemoved(!message.isRemoved());
                 saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
                 return;
             }

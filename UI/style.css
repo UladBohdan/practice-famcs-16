@@ -46,7 +46,7 @@ h1 {
     padding: 20px;
 }
 
-#username {
+#author {
     font-size: x-large;
     color: white;
     font-weight: bold;
@@ -61,17 +61,17 @@ h1 {
     font-size: large;
 }
 
-.username-change {
+.author-change {
 
 }
 
-#new-username-textfield {
+#new-author-textfield {
     border-radius: 3px;
     width: 70%;
     border: 1px lightgray solid;
 }
 
-#update-username-button {
+#update-author-button {
     border-radius: 3px;
     width: 20%;
     background-color: darkred;
