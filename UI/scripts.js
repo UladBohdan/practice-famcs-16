@@ -14,6 +14,11 @@ function run() {
             render(Application);
         });
     loadAuthor();
+    window.setInterval(function() {
+        loadMessages(function() {
+            render(Application);
+        })
+    }, 1000);
 }
 
 function newMessage(text) {
@@ -83,7 +88,7 @@ function loadMessages(done) {
     ajax('GET', url, null, function(responseText){
         var response = JSON.parse(responseText);
         Application.messages = response.messages;
-        Application.token = response.token;
+        //Application.token = response.token;
         done();
     });
 }
@@ -137,6 +142,7 @@ function sendMessage() {
 
 function ajax(method, url, data, continueWith, continueWithError) {
     var xhr = new XMLHttpRequest();
+    document.getElementById("connection").innerHTML = "Your connection is stable!";
 
     continueWithError = continueWithError || defaultErrorHandler;
     xhr.open(method || 'GET', url, true);
@@ -178,7 +184,8 @@ function ajax(method, url, data, continueWith, continueWithError) {
 
 function defaultErrorHandler(message) {
     console.error(message);
-    output(message);
+    document.getElementById("connection").innerHTML = "Connection failed.";
+    //output(message);
 }
 
 function output(value){
