@@ -20,7 +20,7 @@ function run() {
             loadMessages(function() {
                 render(Application);
             });
-        };
+        }
     }, 1000);
 }
 
@@ -163,7 +163,7 @@ function ajax(method, url, data, continueWith, continueWithError) {
             return;
         }
 
-        document.getElementById("connection").innerHTML = "<i class='fa fa-check'></i>";
+        document.getElementById("connection").innerHTML = "<i class='fa fa-check' title='Connected'></i>";
         continueWith(xhr.responseText);
     };
 
@@ -187,14 +187,7 @@ function ajax(method, url, data, continueWith, continueWithError) {
 
 function defaultErrorHandler(message) {
     console.error(message);
-    document.getElementById("connection").innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
-    //output(message);
-}
-
-function output(value){
-    var output = document.getElementById('output');
-
-    output.innerText = JSON.stringify(value, null, 2);
+    document.getElementById("connection").innerHTML = "<i class='fa fa-spinner fa-spin' title='Connection failed'></i>";
 }
 
 function isError(text) {
@@ -209,7 +202,3 @@ function isError(text) {
 
     return !!obj.error;
 }
-
-window.onerror = function(err) {
-    output(err.toString());
-};

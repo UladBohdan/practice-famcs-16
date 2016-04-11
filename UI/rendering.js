@@ -49,35 +49,39 @@ function getMsgOptions(message) {
     msgInfo.classList.add('message-options');
     if (me) {
         if (message.removed) {
-            msgInfo.innerHTML = getTime() + ' | ' + getRecoverLabel(id);
+            msgInfo.innerHTML = getTime(message) + ' | ' + getRecoverLabel(id);
         } else if (message.edited) {
-            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id)
+            msgInfo.innerHTML = getTime(message) + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id)
                 + ' | <b>was edited</b>';
         } else {
-            msgInfo.innerHTML = getTime() + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id);
+            msgInfo.innerHTML = getTime(message) + ' | ' + getRemoveLabel(id) + ' | ' + getEditLabel(id);
         }
     } else {
-        msgInfo.innerHTML = getTime();
+        if (message.edited) {
+            msgInfo.innerHTML = getTime(message) + ' | <b>was edited</b>';
+        } else {
+            msgInfo.innerHTML = getTime(message);
+        }
     }
     return msgInfo;
 }
 
-function getTime() {
-    var timeInMs = new Date();
+function getTime(message) {
+    var timeInMs = new Date(message.timestamp);
     var timeStr = ' ';
     timeStr += timeInMs.getDate() + '.' + (timeInMs.getMonth() + 1) + '.' + timeInMs.getFullYear();
-    timeStr += ' ' + timeInMs.getHours() + ':' + timeInMs.getMinutes();
+    timeStr += ' ' + timeInMs.getHours() + ':' + (timeInMs.getMinutes() < 10 ? "0" : "") + timeInMs.getMinutes();
     return timeStr;
 }
 
 function getRemoveLabel(id) {
-    return "<a onclick='removeMsg(" + ('' + id) + ")'>remove</a>";
+    return "<a onclick='removeMsg(" + ('' + id) + ")' style='cursor: pointer;'>remove</a>";
 }
 
 function getEditLabel(id) {
-    return "<a onclick='editMsg(" + ('' + id) + ")'>edit</a>"
+    return "<a onclick='editMsg(" + ('' + id) + ")' style='cursor: pointer;'>edit</a>"
 }
 
 function getRecoverLabel(id) {
-    return "<a style='color: black;' onclick='recoverMsg(" + ('' + id) + ")'>recover</a>";
+    return "<a style='color: black; cursor: pointer;' onclick='recoverMsg(" + ('' + id) + ")'>recover</a>";
 }

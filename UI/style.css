@@ -26,10 +26,12 @@ header {
 
 #header-left {
     float: left;
+    text-shadow: 1px 1px 2px black, 0 0 1em black;
 }
 
 #header-right {
     float: right;
+    padding: 5px;
 }
 
 footer {
@@ -53,6 +55,7 @@ footer {
     color: white;
     font-weight: bold;
     margin-right: 10px;
+    text-shadow: 1px 1px 2px black, 0 0 1em black;
 }
 
 #new-author-textfield {

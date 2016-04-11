@@ -18,6 +18,16 @@
     background-color: rgba(139,0,0,0.2);
 }
 
+@media screen and (max-width: 670px) {
+    .message {
+        width: 90%;
+    }
+
+    .msg-my {
+        margin-left: 0;
+    }
+}
+
 .removed {
     background-color: lightgray;
     border-color: gray;
