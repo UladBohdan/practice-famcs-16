@@ -28,8 +28,8 @@ function renderMessage(message) {
         area.id = "editing-area";
         area.innerHTML = message.text;
         msg.appendChild(area);
-        msg.innerHTML += "<button class='btn-edit' onclick='submitEditing(" + ('' + message.id) + ")'>Edit</button>"
-        msg.innerHTML += "<button class='btn-edit' onclick='cancelEditing(" + ('' + message.id) + ")'>Cancel</button>"
+        msg.innerHTML += "<button class='btn-edit' onclick='submitEditing()'>Edit</button>"
+        msg.innerHTML += "<button class='btn-edit' onclick='cancelEditing()'>Cancel</button>"
         msg.innerHTML += '<br>&nbsp;';
     } else if (message.removed) {
         msg.classList.add('removed');

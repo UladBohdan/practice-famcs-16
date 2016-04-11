@@ -69,8 +69,8 @@ function recoverMsg(id) {
     });
 }
 
-function submitEditing(id) {
-    var message = findMessageById(id);
+function submitEditing() {
+    var message = findMessageById(editing);
     message.edited = true;
     message.text = document.getElementById("editing-area").value;
 
@@ -80,7 +80,7 @@ function submitEditing(id) {
     });
 }
 
-function cancelEditing(id) {
+function cancelEditing() {
     editing = null;
     render(Application);
 }
@@ -89,16 +89,21 @@ function loadMessages(done) {
     var url = Application.mainUrl + "?token=" + Application.token;
 
     ajax('GET', url, null, function(responseText){
+        var oldHistorySize = Application.messages.length;
         var response = JSON.parse(responseText);
+        var newHistorySize = response.messages.length;
         Application.messages = response.messages;
         //Application.token = response.token;
         done();
+        if (oldHistorySize != newHistorySize) {
+            scrollMessageHistoryDown();
+        }
     });
 }
 
 function saveAuthor(newName) {
     if (typeof(Storage) == "undefined") {
-        output('localStorage is not accessible');
+        console.error('localStorage is not accessible');
         return;
     }
 
@@ -107,7 +112,7 @@ function saveAuthor(newName) {
 
 function loadAuthor() {
     if (typeof(Storage) == "undefined") {
-        output('localStorage is not accessible');
+        console.error('localStorage is not accessible');
         return;
     }
 
@@ -140,7 +145,12 @@ function sendMessage() {
         textBox.value = "";
         Application.messages.push(msg);
         render(Application);
+        scrollMessageHistoryDown();
     });
+}
+
+function scrollMessageHistoryDown() {
+    window.scrollTo(0,document.body.scrollHeight);
 }
 
 function ajax(method, url, data, continueWith, continueWithError) {
@@ -187,7 +197,7 @@ function ajax(method, url, data, continueWith, continueWithError) {
 
 function defaultErrorHandler(message) {
     console.error(message);
-    document.getElementById("connection").innerHTML = "<i class='fa fa-spinner fa-spin' title='Connection failed'></i>";
+    document.getElementById("connection").innerHTML = "<i class='fa fa-refresh fa-spin' title='Connection failed'></i>";
 }
 
 function isError(text) {
