@@ -1,7 +1,7 @@
 'use strict';
 
 function render(root) {
-    document.getElementById('left-column').innerHTML = "";
+    document.getElementById('message-history').innerHTML = "";
     for (var i = 0; i < Application.messages.length; i++) {
         renderMessage(Application.messages[i]);
     }
@@ -38,7 +38,7 @@ function renderMessage(message) {
         msg.appendChild(document.createTextNode(message.text));
     }
     msg.appendChild(getMsgOptions(message));
-    document.getElementById('left-column').appendChild(msg);
+    document.getElementById('message-history').appendChild(msg);
 }
 
 function getMsgOptions(message) {

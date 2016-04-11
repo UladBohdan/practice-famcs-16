@@ -1,81 +1,71 @@
 body {
     margin: 0;
     padding: 0;
-    position: relative;
+    width: 100vw;
+    height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
     background-color: lightgray;
 }
 
-h1 {
-    margin-top: 0;
-    margin-bottom: 0;
+#logo {
     color: white;
+    font-size: 30px;
+    font-weight: bold;
 }
 
-.header-style {
-    margin: 0;
-    padding: 20px;
-    position: relative;
-    color: white;
-    background: darkred;
-    border-bottom: 1px lightgray solid;
-}
-
-#left-column {
-    position: relative;
-    left: 0;
-    top: 0;
-    width: 72%;
-    height: 100vh;
-}
-
-#right-column {
+header {
+    width: 100%;
+    background: rgba(139,0,0,0.8);
+    background: linear-gradient(to top, rgba(211,211,211,0), rgba(139,0,0,0.8));
     position: fixed;
-    right: 0;
     top: 0;
-    width: 28%;
-    height: 100%;
-
-    border-left: 2px solid darkred;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.personal-info {
-    margin-top: 50px;
-    margin-bottom: 50px;
+#header-left {
+    float: left;
+}
+
+#header-right {
+    float: right;
+}
+
+footer {
+    width: 100%;
     background: darkred;
-    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    padding: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#message-history {
+    width: 90vw;
+    margin: 0 auto;
+    padding: 100px 0;
 }
 
 #author {
     font-size: x-large;
     color: white;
     font-weight: bold;
-    margin-left: 20px;
-}
-
-.settings {
-    background: rgba(139,0,0,0.8);
-    margin-top: 10px;
-    padding: 10px;
-    color: white;
-    font-size: large;
-}
-
-.author-change {
-
+    margin-right: 10px;
 }
 
 #new-author-textfield {
-    border-radius: 3px;
-    width: 70%;
+    border-radius: 2px;
     border: 1px lightgray solid;
+    padding: 5px;
 }
 
 #update-author-button {
     border-radius: 3px;
-    width: 20%;
     background-color: darkred;
     color: white;
+    padding: 5px;
     border: 1px lightgray solid;
 }
 
@@ -83,31 +73,36 @@ a {
     color: lightgray;
 }
 
-#new-message-form {
-    position: absolute;
-    bottom: 20px;
-    margin: 20px;
-    width: 95%;
+#connection {
+    font-size: 30px;
+    color: white;
+}
+
+#github-link {
+    font-size: 30px;
+
+    color: white;
+    text-decoration: none;
+}
+
+#input-text-container {
+    margin-right: 80px;
+    margin-left: 10px;
 }
 
 #input-text {
     border: 1px grey solid;
     border-radius: 5px;
-    max-height: 50px;
-    min-height: 50px;
-    width: 90%;
-    max-width: 90%;
-    min-width: 90%;
-    margin: 5px;
+    width: 100%;
+}
+
+#send-button-container {
+    width: 80px;
+    float: right;
 }
 
 #send-button {
-    position: absolute;
-    border: 1px lightgray solid;
-    border-radius: 5px;
-    background-color: darkred;
+    font-size: 30px;
+    margin: 5px;
     color: white;
-    height: 30px;
-    right: 25px;
-    font-size: larger;
 }

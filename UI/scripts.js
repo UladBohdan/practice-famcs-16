@@ -10,14 +10,17 @@ var Application = {
 var editing = null;
 
 function run() {
+    document.getElementById("input-text").focus();
     loadMessages(function(){
             render(Application);
         });
     loadAuthor();
     window.setInterval(function() {
-        loadMessages(function() {
-            render(Application);
-        })
+        if (!editing) {
+            loadMessages(function() {
+                render(Application);
+            });
+        };
     }, 1000);
 }
 
@@ -142,7 +145,6 @@ function sendMessage() {
 
 function ajax(method, url, data, continueWith, continueWithError) {
     var xhr = new XMLHttpRequest();
-    document.getElementById("connection").innerHTML = "Your connection is stable!";
 
     continueWithError = continueWithError || defaultErrorHandler;
     xhr.open(method || 'GET', url, true);
@@ -161,6 +163,7 @@ function ajax(method, url, data, continueWith, continueWithError) {
             return;
         }
 
+        document.getElementById("connection").innerHTML = "<i class='fa fa-check'></i>";
         continueWith(xhr.responseText);
     };
 
@@ -184,7 +187,7 @@ function ajax(method, url, data, continueWith, continueWithError) {
 
 function defaultErrorHandler(message) {
     console.error(message);
-    document.getElementById("connection").innerHTML = "Connection failed.";
+    document.getElementById("connection").innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
     //output(message);
 }
 

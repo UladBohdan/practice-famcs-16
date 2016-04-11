@@ -7,39 +7,42 @@
       <!--  <link rel="stylesheet" type="text/css" href="normalize.css"> -->
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="stylesheet" type="text/css" href="messages-style.css">
+        <!-- just for fonts -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link rel="icon" type="image/png" href="images/icon.png">
         <script src="scripts.js"></script>
         <script src="rendering.js"></script>
     </head>
 
     <body onload="run()">
-        <div id="left-column"></div>
-
-        <div id="right-column">
-            <header class="header-style">
-                <img src="images/icon.png" style="float: left; margin-right: 10px;">
-                <h1>Messenger</h1>
-            </header>
-            <div class="personal-info">
-                <div id="author"></div>
+        <header>
+            <div id="header-left">
+                <span id="logo">Messenger</span>
+                <a href="https://github.com/UladBohdan/practice-famcs-16"
+                   target="_blank"
+                   id="github-link" title="View source code on GitHub">
+                    <i class="fa fa-github"></i>
+                </a>
+                <span id="connection"></span>
             </div>
 
-            <div class="settings">
-                Edit your nickname:<br>
-                <div class="author-change">
-                    <input type="text" id="new-author-textfield">
-                    <button id="update-author-button" onclick="updateAuthorName()">update!</button>
-                </div>
+            <div id="header-right">
+                <span id="author"></span>
+                <input type="text" id="new-author-textfield" placeholder="new nickname">
+                <button id="update-author-button" onclick="updateAuthorName()">update!</button>
             </div>
-            <div class="settings" id="connection">Your connection is stable!</div>
-            <div class="settings">by Uladzislau Bohdan. source code on <a href="https://github.com/UladBohdan/practice-famcs-16" target="_blank">GitHub</a></div>
-            <!-- <div class="settings"><pre id="output"></pre></div> -->
+        </header>
 
-            <div id="new-message-form">
-                <textarea id="input-text" name="new_message" title="New message"></textarea><br>
-                <button id="send-button" onclick="sendMessage()">Send!</button>
+        <div id="message-history"></div>
+
+        <footer>
+            <div id="send-button-container">
+                <i class="fa fa-paper-plane" id="send-button" onclick="sendMessage()"></i>
             </div>
+            <div id="input-text-container">
+                <textarea id="input-text" name="new_message" title="New message" onkeydown = "if (event.keyCode == 13) sendMessage()" ></textarea>
+            </div>
+        </footer>
 
-        </div>
     </body>
 </html>
