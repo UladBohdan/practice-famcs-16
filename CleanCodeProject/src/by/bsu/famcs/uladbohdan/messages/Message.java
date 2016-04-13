@@ -7,19 +7,21 @@ import java.util.UUID;
 
 public class Message implements Comparable<Message> {
 
+    public static final int REGULAR_MESSAGE_CODE = 0;
+    public static final int EDITED_MESSAGE_CODE = 1;
+    public static final int REMOVED_MESSAGE_CODE = 2;
+
     private String id;
     private String author;
     private Long timestamp;
     private String text;
-    private boolean edited;
-    private boolean removed;
+    private int code;
 
     public Message() {
         id = UUID.randomUUID().toString();
         this.text = "?";
         this.author = "?";
-        this.removed = false;
-        this.edited = false;
+        this.code = REGULAR_MESSAGE_CODE;
         timestamp = System.currentTimeMillis();
     }
 
@@ -27,8 +29,7 @@ public class Message implements Comparable<Message> {
         id = UUID.randomUUID().toString();
         this.text = message;
         this.author = author;
-        this.removed = false;
-        this.edited = false;
+        this.code = REGULAR_MESSAGE_CODE;
         timestamp = System.currentTimeMillis();
     }
 
@@ -48,12 +49,8 @@ public class Message implements Comparable<Message> {
         return timestamp;
     }
 
-    public boolean isRemoved() {
-        return removed;
-    }
-
-    public boolean isEdited() {
-        return edited;
+    public int getMessageCode() {
+        return code;
     }
 
     public void setId(String id) {
@@ -72,12 +69,8 @@ public class Message implements Comparable<Message> {
         this.timestamp = timestamp;
     }
 
-    public void setEdited(boolean edited) {
-        this.edited = edited;
-    }
-
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
+    public void setMessageCode(int code) {
+        this.code = code;
     }
 
     public LocalDateTime getTime() {

@@ -71,15 +71,13 @@ public class MessageHistory {
     }
 
     public Message editMessage(String id, String updatedText) {
-        for (Message message : data) {
-            if (message.getId().equals(id)) {
-                message.setText(updatedText);
-                message.setEdited(true);
-                saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
-                return message;
-            }
-        }
-        return null;
+        Message message = new Message();
+        message.setId(id);
+        message.setText(updatedText);
+        message.setMessageCode(Message.EDITED_MESSAGE_CODE);
+        data.add(message);
+        saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
+        return message;
     }
 
     public void showMessages(boolean isFormatted) {
@@ -163,13 +161,11 @@ public class MessageHistory {
     }
 
     public void markMessageAsRemovedOrRecovered(String id) {
-        for(Message message : data) {
-            if (message.getId().equals(id)) {
-                message.setRemoved(!message.isRemoved());
-                saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
-                return;
-            }
-        }
+        Message message = new Message();
+        message.setId(id);
+        message.setMessageCode(Message.REMOVED_MESSAGE_CODE);
+        data.add(message);
+        saveMessagesToJsonFile(MESSAGES_EXTERNAL_STORAGE);
     }
 
     public void saveMessagesToJsonFile(String fileName) {

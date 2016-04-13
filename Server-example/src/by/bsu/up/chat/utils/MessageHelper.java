@@ -128,15 +128,12 @@ public class MessageHelper {
         String author = ((String) jsonObject.get(Constants.Message.FIELD_AUTHOR));
         long timestamp = ((long) jsonObject.get(Constants.Message.FIELD_TIMESTAMP));
         String text = ((String) jsonObject.get(Constants.Message.FIELD_TEXT));
-        boolean edited = jsonObject.get(Constants.Message.FIELD_EDITED).equals(true);
-        boolean removed = jsonObject.get(Constants.Message.FIELD_REMOVED).equals(true);
         Message message = new Message();
         message.setId(id);
         message.setAuthor(author);
         message.setTimestamp(timestamp);
         message.setText(text);
-        message.setEdited(edited);
-        message.setRemoved(removed);
+        message.setMessageCode(Message.REGULAR_MESSAGE_CODE);
         return message;
     }
 
@@ -165,8 +162,7 @@ public class MessageHelper {
         jsonObject.put(Constants.Message.FIELD_AUTHOR, message.getAuthor());
         jsonObject.put(Constants.Message.FIELD_TIMESTAMP, message.getTimestamp());
         jsonObject.put(Constants.Message.FIELD_TEXT, message.getText());
-        jsonObject.put(Constants.Message.FIELD_REMOVED, message.isRemoved());
-        jsonObject.put(Constants.Message.FIELD_EDITED, message.isEdited());
+        jsonObject.put(Constants.Message.FIELD_MESSAGE_CODE, message.getMessageCode());
         return jsonObject;
     }
 }
