@@ -11,15 +11,11 @@ var editing = null;
 
 function run() {
     document.getElementById("input-text").focus();
-    loadMessages(function(){
-            render(Application);
-        });
+    updateState();
     loadAuthor();
     window.setInterval(function() {
         if (!editing) {
-            loadMessages(function() {
-                render(Application);
-            });
+            updateState();
         }
     }, 1000);
 }
@@ -28,8 +24,6 @@ function newMessage(text) {
     return {
         "author": Application.author,
         "text": text,
-        "removed": false,
-        "edited": false,
         "timestamp": new Date().getTime(),
         "id": "" + uniqueId()
     };
@@ -48,76 +42,74 @@ function findMessageById(id) {
     }
 }
 
-function removeMsg(id) {
-    var url = Application.mainUrl + "?msgId=" + id;
-    ajax('DELETE', url, null, function(){
-        findMessageById(id).removed = true;
-        render(Application);
+function sendMessage() {
+    var textBox = document.getElementById('input-text');
+    var text = textBox.value;
+    if (text == '' || text == null) {
+        return;
+    }
+    var msg = newMessage(text);
+
+    ajax('POST', Application.mainUrl, JSON.stringify(msg), function() {
+        textBox.value = "";
+        updateState();
     });
 }
 
-function editMsg(id) {
+function removeOrRecoverMessage(id) {
+    var url = Application.mainUrl + "?msgId=" + id;
+    ajax('DELETE', url, null, function() {
+        updateState();
+    });
+}
+
+function editMessage(id) {
     editing = id;
-    render(Application);
-}
-
-function recoverMsg(id) {
-    var url = Application.mainUrl + "?msgId=" + id;
-    ajax('DELETE', url, null, function(){
-        findMessageById(id).removed = false;
-        render(Application);
-    });
+    renderHistory();
 }
 
 function submitEditing() {
     var message = findMessageById(editing);
-    message.edited = true;
     message.text = document.getElementById("editing-area").value;
 
-    ajax('PUT', Application.mainUrl, JSON.stringify(message), function(){
+    ajax('PUT', Application.mainUrl, JSON.stringify(message), function() {
         editing = null;
-        render(Application);
+        updateState();
     });
 }
 
 function cancelEditing() {
     editing = null;
-    render(Application);
+    renderHistory();
 }
 
-function loadMessages(done) {
+function updateState() {
     var url = Application.mainUrl + "?token=" + Application.token;
 
-    ajax('GET', url, null, function(responseText){
-        var oldHistorySize = Application.messages.length;
-        var response = JSON.parse(responseText);
-        var newHistorySize = response.messages.length;
-        Application.messages = response.messages;
-        //Application.token = response.token;
-        done();
-        if (oldHistorySize != newHistorySize) {
-            scrollMessageHistoryDown();
-        }
+    ajax('GET', url, null, function(responseText) {
+        handleResponse(responseText);
     });
 }
 
 function saveAuthor(newName) {
-    if (typeof(Storage) == "undefined") {
-        console.error('localStorage is not accessible');
-        return;
+    if (localStorageIsAvailable()) {
+        localStorage.setItem("current-author-name", newName);
     }
-
-    localStorage.setItem("current-author-name", newName);
 }
 
 function loadAuthor() {
+    if (localStorageIsAvailable()) {
+        Application.author = localStorage.getItem("current-author-name") || "Guest";
+        document.getElementById('author').innerText = Application.author;
+    }
+}
+
+function localStorageIsAvailable() {
     if (typeof(Storage) == "undefined") {
         console.error('localStorage is not accessible');
-        return;
+        return false;
     }
-
-    Application.author = localStorage.getItem("current-author-name") || "Guest";
-    document.getElementById('author').innerText = Application.author;
+    return true;
 }
 
 function updateAuthorName() {
@@ -131,22 +123,6 @@ function updateAuthorName() {
     saveAuthor(newName.value);
     newName.value = '';
     render(Application);
-}
-
-function sendMessage() {
-    var textBox = document.getElementById('input-text');
-    var text = textBox.value;
-    if (text == '' || text == null) {
-        return;
-    }
-    var msg = newMessage(text);
-
-    ajax('POST', Application.mainUrl, JSON.stringify(msg), function() {
-        textBox.value = "";
-        Application.messages.push(msg);
-        render(Application);
-        scrollMessageHistoryDown();
-    });
 }
 
 function scrollMessageHistoryDown() {

@@ -1,9 +1,50 @@
 'use strict';
 
-function render(root) {
+var MessageCodes = {
+    REGULAR_MESSAGE_CODE : 0,
+    EDITED_MESSAGE_CODE : 1,
+    REMOVED_MESSAGE_CODE : 2
+};
+
+function handleResponse(responseText) {
+    var response = JSON.parse(responseText);
+    if (Application.token != response.token) {
+        Application.token = response.token;
+        var newMessagesReceived = false;
+        for (var i = 0; i < response.messages.length; i++) {
+            newMessagesReceived = handleMessage(response.messages[i]) || newMessagesReceived;
+        }
+        renderHistory();
+        if (newMessagesReceived) {
+            scrollMessageHistoryDown();
+        }
+    }
+}
+
+function handleMessage(message) {
+    switch(message.code) {
+        case MessageCodes.REGULAR_MESSAGE_CODE:
+            message['removed'] = false;
+            message['edited'] = false;
+            Application.messages.push(message);
+            return true;
+        case MessageCodes.EDITED_MESSAGE_CODE:
+            var msg = findMessageById(message.id);
+            msg['edited'] = true;
+            msg['text'] = message.text;
+            return false;
+        case MessageCodes.REMOVED_MESSAGE_CODE:
+            var msg = findMessageById(message.id);
+            msg['removed'] = !msg['removed'];
+            return false;
+    }
+}
+
+function renderHistory() {
     document.getElementById('message-history').innerHTML = "";
-    for (var i = 0; i < Application.messages.length; i++) {
-        renderMessage(Application.messages[i]);
+    //alert("Handled! in application: " + Application.messages.length);
+    for (var j = 0; j < Application.messages.length; j++) {
+        renderMessage(Application.messages[j]);
     }
 }
 
@@ -75,13 +116,13 @@ function getTime(message) {
 }
 
 function getRemoveLabel(id) {
-    return "<a onclick='removeMsg(" + ('' + id) + ")' style='cursor: pointer;'>remove</a>";
+    return "<a onclick='removeOrRecoverMessage(" + ('' + id) + ")' style='cursor: pointer;'>remove</a>";
 }
 
 function getEditLabel(id) {
-    return "<a onclick='editMsg(" + ('' + id) + ")' style='cursor: pointer;'>edit</a>"
+    return "<a onclick='editMessage(" + ('' + id) + ")' style='cursor: pointer;'>edit</a>"
 }
 
 function getRecoverLabel(id) {
-    return "<a style='color: black; cursor: pointer;' onclick='recoverMsg(" + ('' + id) + ")'>recover</a>";
+    return "<a style='color: black; cursor: pointer;' onclick='removeOrRecoverMessage(" + ('' + id) + ")'>recover</a>";
 }
