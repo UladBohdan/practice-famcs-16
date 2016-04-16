@@ -50,16 +50,16 @@ function sendMessage() {
     }
     var msg = newMessage(text);
 
-    ajax('POST', Application.mainUrl, JSON.stringify(msg), function() {
+    ajax('POST', getUrlWithToken(), JSON.stringify(msg), function(responseText) {
         textBox.value = "";
-        updateState();
+        handleResponse(responseText);
     });
 }
 
 function removeOrRecoverMessage(id) {
-    var url = Application.mainUrl + "?msgId=" + id;
-    ajax('DELETE', url, null, function() {
-        updateState();
+    var url = getUrlWithToken() + "&msgId=" + id;
+    ajax('DELETE', url, null, function(responseText) {
+        handleResponse(responseText);
     });
 }
 
@@ -68,27 +68,29 @@ function editMessage(id) {
     renderHistory();
 }
 
-function submitEditing() {
-    var message = findMessageById(editing);
-    message.text = document.getElementById("editing-area").value;
-
-    ajax('PUT', Application.mainUrl, JSON.stringify(message), function() {
-        editing = null;
-        updateState();
-    });
-}
-
 function cancelEditing() {
     editing = null;
     renderHistory();
 }
 
-function updateState() {
-    var url = Application.mainUrl + "?token=" + Application.token;
+function submitEditing() {
+    var message = findMessageById(editing);
+    message.text = document.getElementById("editing-area").value;
 
-    ajax('GET', url, null, function(responseText) {
+    ajax('PUT', getUrlWithToken(), JSON.stringify(message), function(responseText) {
+        editing = null;
         handleResponse(responseText);
     });
+}
+
+function updateState() {
+    ajax('GET', getUrlWithToken(), null, function(responseText) {
+        handleResponse(responseText);
+    });
+}
+
+function getUrlWithToken() {
+    return Application.mainUrl + "?token=" + Application.token;
 }
 
 function saveAuthor(newName) {
@@ -122,7 +124,7 @@ function updateAuthorName() {
     Application.author = newName.value;
     saveAuthor(newName.value);
     newName.value = '';
-    render(Application);
+    renderHistory();
 }
 
 function scrollMessageHistoryDown() {

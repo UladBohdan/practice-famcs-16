@@ -63,25 +63,11 @@ public class ServerHandler implements HttpHandler {
     }
 
     private Response doGet(HttpExchange httpExchange) {
-        String query = httpExchange.getRequestURI().getQuery();
-        if (query == null) {
-            return Response.badRequest("Absent query in request");
-        }
-        Map<String, String> map = queryToMap(query);
-        String token = map.get(Constants.REQUEST_PARAM_TOKEN);
-        if (StringUtils.isEmpty(token)) {
-            return Response.badRequest("Token query parameter is required");
-        }
         try {
-            int index = MessageHelper.parseToken(token);
-            if (index > messageStorage.size()) {
-                return Response.badRequest(
-                        String.format("Incorrect token in request: %s. Server does not have so many messages", token));
-            }
-            List<Message> messages = messageStorage.getPortion(index);
-            String responseBody = MessageHelper.buildServerResponseBody(messages, messageStorage.size());
-            return Response.ok(responseBody);
+            Map<String, String> params = getRequestParams(httpExchange);
+            return respondWithUpdates(params);
         } catch (InvalidTokenException e) {
+            logger.error("GET: invalid token.", e);
             return Response.badRequest(e.getMessage());
         }
     }
@@ -91,10 +77,13 @@ public class ServerHandler implements HttpHandler {
             Message message = MessageHelper.getClientMessage(httpExchange.getRequestBody());
             logger.info(String.format("Received new message from user: %s", message));
             messageStorage.addMessage(message);
-            return Response.ok();
+            return respondWithUpdates(getRequestParams(httpExchange));
         } catch (ParseException e) {
             logger.error("Could not parse message.", e);
             return new Response(Constants.RESPONSE_CODE_BAD_REQUEST, "Incorrect request body");
+        } catch (InvalidTokenException e) {
+            logger.error("POST: invalid token.", e);
+            return Response.badRequest(e.getMessage());
         }
     }
 
@@ -107,27 +96,25 @@ public class ServerHandler implements HttpHandler {
             } else {
                 logger.info("Message to be edited not found");
             }
-            return Response.ok();
+            return respondWithUpdates(getRequestParams(httpExchange));
         } catch (ParseException e) {
             logger.error("Could not parse message.", e);
             return new Response(Constants.RESPONSE_CODE_BAD_REQUEST, "Incorrect request body");
+        } catch (InvalidTokenException e) {
+            logger.error("PUT: invalid token.", e);
+            return Response.badRequest(e.getMessage());
         }
     }
 
     private Response doDelete(HttpExchange httpExchange) {
-        String query = httpExchange.getRequestURI().getQuery();
-        if (query == null) {
-            return Response.badRequest("Absent query in request");
-        }
-        Map<String, String> map = queryToMap(query);
-        String id = map.get(Constants.REQUEST_PARAM_MESSAGE_ID);
-        if (StringUtils.isEmpty(id)) {
-            return Response.badRequest("msgId query parameter is required to remove a message");
-        }
         try {
+            Map<String, String> params = getRequestParams(httpExchange);
+            String id = getIdParam(params);
             messageStorage.markMessageAsRemovedOrRecovered(id);
-            return Response.ok();
+            logger.info("Message marked as removed or recovered: " + id);
+            return respondWithUpdates(getRequestParams(httpExchange));
         } catch (InvalidTokenException e) {
+            logger.error("DELETE: invalid token.", e);
             return Response.badRequest(e.getMessage());
         }
     }
@@ -135,6 +122,42 @@ public class ServerHandler implements HttpHandler {
     private Response doOptions(HttpExchange httpExchange) {
         httpExchange.getResponseHeaders().add(Constants.REQUEST_HEADER_ACCESS_CONTROL_METHODS,Constants.HEADER_VALUE_ALL_METHODS);
         return Response.ok();
+    }
+
+    private Map<String, String> getRequestParams(HttpExchange httpExchange) throws InvalidTokenException {
+        String query = httpExchange.getRequestURI().getQuery();
+        if (query == null) {
+            throw new InvalidTokenException("Absent query in request");
+        }
+        return queryToMap(query);
+    }
+
+    private String getTokenParam(Map<String, String> params) throws InvalidTokenException {
+        String token = params.get(Constants.REQUEST_PARAM_TOKEN);
+        if (StringUtils.isEmpty(token)) {
+            throw new InvalidTokenException("Token query parameter is required");
+        }
+        return token;
+    }
+
+    private String getIdParam(Map<String, String> params) throws InvalidTokenException {
+        String id = params.get(Constants.REQUEST_PARAM_MESSAGE_ID);
+        if (StringUtils.isEmpty(id)) {
+            throw new InvalidTokenException("Token query parameter is required");
+        }
+        return id;
+    }
+
+    private Response respondWithUpdates(Map<String, String> params) throws InvalidTokenException {
+        String token = getTokenParam(params);
+        int index = MessageHelper.parseToken(token);
+        if (index > messageStorage.size()) {
+            return Response.badRequest(
+                    String.format("Incorrect token in request: %s. Server does not have so many messages", token));
+        }
+        List<Message> messages = messageStorage.getPortion(index);
+        String responseBody = MessageHelper.buildServerResponseBody(messages, messageStorage.size());
+        return Response.ok(responseBody);
     }
 
     private void sendResponse(HttpExchange httpExchange, Response response) {
