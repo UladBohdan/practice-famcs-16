@@ -1,9 +1,11 @@
 # gitignore file
 *.iml
 *.zip
+*.class
 *~
 .idea/
 out/
+target/
 Server-example/.idea/
 Server-example/launcherlog.txt
 Server-example/serverlog.txt
