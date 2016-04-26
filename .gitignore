@@ -7,6 +7,7 @@
 out/
 target/
 Server-example/.idea/
+Server-example/bin/
 Server-example/launcherlog.txt
 Server-example/serverlog.txt
 Server-example/logfile
