@@ -1,7 +1,7 @@
 **About dependencies**
 
-Requires classes Message & MessageHistory from package by.bsu.famcs.uladbohdan.messages from CleanCodeProject (may be added as a dependency for project)
+all of dependencies are included into lib/ directory
 
-Gson-2.3.1 (.jar file is included to repository - you can find it in CleanCodeProject directory)
+use .cmd and .sh files to compile and to run
 
-json-simple-1.1.1 (.jar file is included into libs/ directory)
+p.s. not 100% sure about .cmd files as had no opportunity to check them on my linux
