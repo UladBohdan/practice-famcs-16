@@ -18,6 +18,7 @@ import java.util.Formatter;
 public class LoginServlet extends HttpServlet {
 
     private User[] users;
+    private static final String USER_NOT_FOUND = "not found";
 
     @Override
     public void init() throws ServletException {
@@ -39,20 +40,21 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        if (isUserFound(username, password)) {
-            resp.sendRedirect("/homepage.html");
+        String userId = isUserFound(username, password);
+        if (!userId.equals(USER_NOT_FOUND)) {
+            resp.sendRedirect("/homepage.html?uid=" + userId);
         } else {
             req.setAttribute("errorMsg", "Wrong username/password. Try again:");
             getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
         }
     }
 
-    private boolean isUserFound(String username, String password) {
+    private String isUserFound(String username, String password) {
         try {
             for (User user : users) {
                 if (username.equals(user.getUsername()) &&
                         encryptPassword(password).equals(user.getPassword())) {
-                    return true;
+                    return user.getUid();
                 }
             }
         } catch(NoSuchAlgorithmException e) {
@@ -60,7 +62,7 @@ public class LoginServlet extends HttpServlet {
         } catch(UnsupportedEncodingException e) {
             System.out.println("Encoding is not supported");
         }
-        return false;
+        return USER_NOT_FOUND;
     }
 
     private String encryptPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {

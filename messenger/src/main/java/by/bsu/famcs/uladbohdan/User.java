@@ -2,8 +2,17 @@ package by.bsu.famcs.uladbohdan;
 
 public class User {
 
+    private String uid;
     private String username;
     private String password;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public String getUsername() {
         return username;

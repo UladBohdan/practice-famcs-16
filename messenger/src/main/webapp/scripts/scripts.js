@@ -1,7 +1,7 @@
 'use strict';
 
 var Application = {
-    mainUrl : "http://127.0.1.1:1555/chat",
+    mainUrl : "http://localhost:8888/chat",
     messages : [],
     token : "TN11EN",
     author : ""
@@ -13,11 +13,11 @@ function run() {
     document.getElementById("input-text").focus();
     updateState();
     loadAuthor();
-    window.setInterval(function() {
+    /*window.setInterval(function() {
         if (!editing) {
             updateState();
         }
-    }, 1000);
+    }, 1000);*/
 }
 
 function newMessage(text) {
@@ -90,7 +90,7 @@ function updateState() {
 }
 
 function getUrlWithToken() {
-    return Application.mainUrl + "?token=" + Application.token;
+    return Application.mainUrl + "?token=" + Application.token + "&uid=1";
 }
 
 function saveAuthor(newName) {
