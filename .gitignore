@@ -5,6 +5,7 @@
 *~
 .idea/
 out/
+messageHistory/
 target/
 Server-example/.idea/
 Server-example/bin/
