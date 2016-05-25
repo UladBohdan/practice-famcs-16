@@ -1,23 +1,16 @@
 'use strict';
 
-var Application = {
-    mainUrl : "http://localhost:8888/chat",
-    messages : [],
-    token : "TN11EN",
-    author : ""
-};
-
 var editing = null;
 
 function run() {
     document.getElementById("input-text").focus();
+    document.getElementById("author").innerHTML = Application.author;
     updateState();
-    loadAuthor();
-    /*window.setInterval(function() {
+    window.setInterval(function() {
         if (!editing) {
             updateState();
         }
-    }, 1000);*/
+    }, 1000);
 }
 
 function newMessage(text) {
@@ -90,41 +83,7 @@ function updateState() {
 }
 
 function getUrlWithToken() {
-    return Application.mainUrl + "?token=" + Application.token + "&uid=1";
-}
-
-function saveAuthor(newName) {
-    if (localStorageIsAvailable()) {
-        localStorage.setItem("current-author-name", newName);
-    }
-}
-
-function loadAuthor() {
-    if (localStorageIsAvailable()) {
-        Application.author = localStorage.getItem("current-author-name") || "Guest";
-        document.getElementById('author').innerText = Application.author;
-    }
-}
-
-function localStorageIsAvailable() {
-    if (typeof(Storage) == "undefined") {
-        console.error('localStorage is not accessible');
-        return false;
-    }
-    return true;
-}
-
-function updateAuthorName() {
-    var newName = document.getElementById('new-author-textfield');
-    if (newName.value == '' || newName == null) {
-        return;
-    }
-    var authorName = document.getElementById('author');
-    authorName.innerHTML = newName.value;
-    Application.author = newName.value;
-    saveAuthor(newName.value);
-    newName.value = '';
-    renderHistory();
+    return Application.rootUrl + "/chat?token=" + Application.token + "&uid=" + Application.uid;
 }
 
 function scrollMessageHistoryDown() {

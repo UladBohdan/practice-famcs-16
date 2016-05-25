@@ -42,7 +42,9 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
         String userId = isUserFound(username, password);
         if (!userId.equals(USER_NOT_FOUND)) {
-            resp.sendRedirect("/homepage.html?uid=" + userId);
+            req.setAttribute("author", username);
+            req.setAttribute("uid", userId);
+            getServletContext().getRequestDispatcher("/homepage.jsp").forward(req, resp);
         } else {
             req.setAttribute("errorMsg", "Wrong username/password. Try again:");
             getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
