@@ -1,0 +1,1 @@
+SELECT name, text, date FROM users, messages WHERE LENGTH(messages.text) > 140 AND users.id = messages.user_id

@@ -1,0 +1,1 @@
+SELECT name FROM users WHERE ( SELECT COUNT(*) FROM messages WHERE messages.date = CURDATE() AND users.id = messages.user_id) > 3

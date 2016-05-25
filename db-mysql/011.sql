@@ -1,0 +1,1 @@
+SELECT DATEDIFF(CURDATE(), (SELECT date FROM messages ORDER BY date DESC LIMIT 1)) AS DiffDate
