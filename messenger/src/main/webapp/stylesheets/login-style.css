@@ -1,7 +1,3 @@
-small {
-    font-size: xx-small;
-}
-
 .title {
     color: darkred;
 }
@@ -13,14 +9,14 @@ small {
     font-size: xx-large;
 }
 
-.fields {
-    border-radius: 2px;
-}
-
 .error {
     color: darkred;
 }
 
 .input {
     margin: 3px;
+}
+
+.label {
+    font-size: medium;
 }

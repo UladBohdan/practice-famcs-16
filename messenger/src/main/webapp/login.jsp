@@ -6,7 +6,7 @@
     <title>Login to Messenger</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/icon.png">
-    <link rel="stylesheet" type="text/css" href="stylesheets/login-style.css">
+    <link rel="stylesheet" type="text/css" href="<c:url value="stylesheets/login-style.css" />">
 </head>
 <body class="login">
     <h1 class="title">Messenger</h1>
@@ -22,7 +22,7 @@
     <form action="/login" method="post" class="fields">
         <input name="username" placeholder="Username" class="input"><br>
         <input type="password" name="password" placeholder="Password" class="input"><br>
-        <small>Use <strong>Guest</strong> account to log in (password: password)</small><br><br>
+        <p class="label">Use <strong>Guest</strong> account to log in (password: password)</p>
         <button type="submit" class="input">Log in</button>
     </form>
 </body>
